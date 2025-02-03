@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "NomicFoundation.hardhat-solidity",
+    "tintinweb.solidity-visual-auditor",
+    "jebbs.plantuml",
+    "bradlc.vscode-tailwindcss"
+  ]
+}
