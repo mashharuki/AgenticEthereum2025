@@ -26,3 +26,8 @@ lerna-debug.log*
 
 # misc
 .DS_Store
+
+# deps
+node_modules/
+.env
+wallet_data.txt
