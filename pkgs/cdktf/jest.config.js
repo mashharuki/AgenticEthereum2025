@@ -5,7 +5,6 @@
  */
 
 module.exports = {
-  
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -141,10 +140,7 @@ module.exports = {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  testMatch: [
-    "**/__tests__/**/*.ts",
-    "**/?(*.)+(spec|test).ts"
-  ],
+  testMatch: ["**/__tests__/**/*.ts", "**/?(*.)+(spec|test).ts"],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   testPathIgnorePatterns: ["/node_modules/", ".d.ts", ".js"],

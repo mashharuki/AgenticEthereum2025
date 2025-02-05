@@ -5,7 +5,5 @@
   "sendCrashReports": "true",
   "terraformProviders": [],
   "terraformModules": [],
-  "context": {
-
-  }
+  "context": {}
 }
