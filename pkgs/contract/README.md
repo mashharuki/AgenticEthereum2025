@@ -1,4 +1,4 @@
-# スマートコントラクト用フォルダ
+# Smart Contract
 
 ## How to work
 
