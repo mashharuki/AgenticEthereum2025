@@ -58,7 +58,7 @@ Content-Type: application/json
 }
 
 ## "prompt": "アカウントが Arbitrum Sepolia ネットワークで 5 USDC以上保有している場合、 5 USDCを貸し出してください。 結果に以下を含めてください: - アカウントの新しい担保状況 - トランザクションハッシュ - トランザクションステータス"
-## "prompt": "アカウントが Arbitrum Sepolia ネットワークで 5 USDC以上保有している場合、 5 USDCを貸し出してください。 結果に以下を含めてください: - アカウントの新しい担保状況 - トランザクションハッシュ - トランザクションステータス"
+## "prompt": "アカウントが Holeskyで 1stETH以上保有している場合、 1stETHをリステーキングしてください。 結果に以下を含めてください: - アカウントの新しい担保状況 - トランザクションハッシュ - トランザクションステータス"
 
 ### POST /runCryptoVertexAIAgent
 POST {{baseUrl}}/runCryptoVertexAIAgent
