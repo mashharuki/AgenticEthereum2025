@@ -25,7 +25,7 @@
 - Docker コンテナを起動
 
   ```bash
-  docker run -p 3000:3000 <imageid>
+  docker run -p 3000:3000 --env-file .env autonome-cdp-custom:latest
   ```
 
   イメージ ID は以下で確認
@@ -45,3 +45,17 @@
   ```bash
   docker image rm -f <imageid>
   ```
+
+- push to docker hub
+
+  ```bash
+  docker tag autonome-cdp-custom:latest haruki31067/autonome-cdp-custom:latest
+  ```
+
+  ```bash
+  docker push haruki31067/autonome-cdp-custom:latest
+  ```
+
+  Published Container image
+
+  [docker/haruki31067/autonome-cdp-custom](https://hub.docker.com/repository/docker/haruki31067/autonome-cdp-custom/general)
