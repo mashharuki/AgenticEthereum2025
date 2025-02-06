@@ -27,6 +27,11 @@
   ```bash
   docker run -p 3000:3000 --env-file .env autonome-cdp-custom:latest
   ```
+  or
+
+  ```bash
+  docker run -p 3000:3000 --env-file .env haruki31067/autonome-cdp-custom:latest
+  ```
 
   イメージ ID は以下で確認
 
