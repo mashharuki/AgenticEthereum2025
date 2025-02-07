@@ -13,7 +13,7 @@ POST {{baseUrl}}/runCdpChatMode
 Content-Type: application/json
 
 {
-  "prompt": "What is my wallet's balance (EURC) now?"
+  "prompt": "Please sign message to 'Hi, I'm a human.'"
 }
 
 ## "prompt": "What is my wallet's balance (ETH & USDC) now?"

@@ -22,6 +22,12 @@
   docker build . -t autonome-cdp-custom:latest
   ```
 
+  build for Autonome
+
+  ```bash
+  docker build --platform linux/amd64 -t autonome-cdp-custom:latest .
+  ```
+
 - Docker コンテナを起動
 
   ```bash
