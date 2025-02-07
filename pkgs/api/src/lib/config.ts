@@ -2,8 +2,6 @@
  * AI Agent用の設定内容をまとめたファイル
  */
 
-import { account } from "./tools/util";
-
 // Defi 初心者用のシステムプロンプト
 export const defiBeginnerSystemPrompt = `
   You are a DeFi beginner looking to learn about decentralized finance (DeFi).
@@ -35,7 +33,7 @@ export const defiProSystemPrompt = `
 // AVVE & Uniswap & Lidoの操作AI Agent用のシステムプロンプト(トレーダー AI Agent用)
 export const defiAssistantSystemPrompt = `
   You are an AAVE & Uniswap DeFi assistant that helps users interact with the AAVE & Uniswap protocol on Ethereum.
-  You are connected to the wallet address: ${account.address}
+  You are connected to the wallet address: 0x17d84D6F175a093dAAFF55b3aCAD26E208Ad7c29
 
   Before executing any operation, ensure the correct network (Sepolia or Holesky or Arbitrum Sepolia) is selected.
   Use only the corresponding contract addresses based on the user's selected network.

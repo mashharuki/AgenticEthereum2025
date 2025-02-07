@@ -1,7 +1,7 @@
 # API Endpoint
-@baseUrl = http://localhost:3000
+#@baseUrl = http://localhost:3000
 # ここは各自デプロイした結果によって異なります。
-#@baseUrl = https://hono-vertexai-image-tbj5qgjmvq-uc.a.run.app
+@baseUrl = https://hono-vertexai-image-tbj5qgjmvq-uc.a.run.app
 
 ### GET /
 GET {{baseUrl}}/
