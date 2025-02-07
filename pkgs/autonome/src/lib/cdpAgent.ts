@@ -1,5 +1,4 @@
 import * as fs from "node:fs";
-import * as readline from "node:readline";
 import {
   AgentKit,
   CdpWalletProvider,
@@ -46,7 +45,7 @@ export const createCdpAgentKitTools = async () => {
   if (fs.existsSync(WALLET_DATA_FILE)) {
     try {
       walletDataStr = fs.readFileSync(WALLET_DATA_FILE, "utf8");
-      console.log("Read wallet data:", walletDataStr);
+      // console.log("Read wallet data:", walletDataStr);
     } catch (error) {
       console.error("Error reading wallet data:", error);
       // Continue without wallet data
@@ -150,43 +149,34 @@ export const runCdpChatMode = async (systemPrompt: string, prompt: string) => {
 
   const response: string[] = [];
 
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
   try {
     // get agent and config
     const { agent, config } = await initializeCdpAgent(systemPrompt);
 
-    const stream = await agent.stream(
+    // call AI API
+    const stream = await agent.invoke(
       { messages: [new HumanMessage(prompt)] },
       config,
     );
 
-    for await (const chunk of stream) {
-      if ("agent" in chunk) {
-        if (chunk.agent.messages?.[0]) {
-          console.log(chunk.agent.messages[0].content);
-          response.push(chunk.agent.messages[0].content);
-        }
-      } else if ("tools" in chunk) {
-        if (chunk.tools.messages[0]) {
-          console.log(chunk.tools.messages[0].content);
-          response.push(chunk.tools.messages[0].content);
-        }
-      }
-      console.log("-------------------");
-      response.push("-------------------");
-    }
-    rl.close();
+    console.log(
+      "Stream output:",
+      stream.messages[stream.messages.length - 1].content.toString(),
+    );
+
+    response.push(
+      "====================================================================",
+    );
+    response.push(
+      stream.messages[stream.messages.length - 1].content.toString(),
+    );
+    response.push(
+      "====================================================================",
+    );
 
     return response;
   } catch (error) {
     console.error("Error running chat mode:", error);
-    response.push("Error running chat mode:");
-
-    rl.close();
     return response;
   }
 };

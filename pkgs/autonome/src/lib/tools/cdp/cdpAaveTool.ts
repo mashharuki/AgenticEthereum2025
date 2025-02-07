@@ -127,7 +127,7 @@ export const createBorrowCryptoToolForCdp =
         const result =
           await walletProvider.waitForTransactionReceipt(borrowHash);
 
-        return `Borrow transaction : ${result.getTransactionLink()}`;
+        return `Borrow transaction : ${borrowHash}`;
       } catch (error) {
         console.error("Error executing lend_crypto:", error);
         return "Error executing lend_crypto";
@@ -184,7 +184,7 @@ export const createLendCryptoToolForCdp =
         const result =
           await walletProvider.waitForTransactionReceipt(approveHash);
 
-        console.log(`Approve transaction: ${result.getTransactionLink()}`);
+        console.log(`Approve transaction: ${approveHash}`);
 
         // supply method call
         const supplyHash = await await walletProvider.sendTransaction({
@@ -200,9 +200,9 @@ export const createLendCryptoToolForCdp =
         const result2 =
           await walletProvider.waitForTransactionReceipt(supplyHash);
 
-        console.log(`Supply transaction: ${result2.getTransactionLink()}`);
+        console.log(`Supply transaction: ${supplyHash}`);
 
-        return `Supply transaction hash: ${result2.getTransactionLink()}`;
+        return `Supply transaction hash: ${supplyHash}`;
       } catch (error) {
         console.error("Error executing lend_crypto:", error);
         return "Error executing lend_crypto";

@@ -1,20 +1,23 @@
 ## Autonome 用の APIを叩く http リクエスト
-@baseUrl=https://autonome.alt.technology/web3-dev-eesyph
+@baseUrl=https://autonome.alt.technology/customcd-xxhupu
 
 ### POST Request
-POST {{baseUrl}}/chat
+POST {{baseUrl}}/runCdpChatMode
 Content-Type: application/json
 Authorization: Basic d2ViMy1kZXY6VHJJa051WEJQSg==
 
 {
-  "message": "what is my wallet's balance (ETH & USDC) now?"
+  "prompt": "Please sign message to 'Hi, I'm a human.' "
 }
 
+## "prompt": "What is my wallet's balance (ETH & USDC) now?"
+## "prompt": "What is my wallet's balance (EURC) now?"
+## "prompt": "What is my wallet's balance (ETH) on Holesky now?"
+## "prompt": "Please tell me abount my account data on AAVE protocol."
+## "prompt": "Please register myTestDomain to basename"
+## "prompt": "Cloud you fund ETH (faucet) to my wallet on base-sepolia?"
+## "prompt": "Cloud you send 0.001ETH from my wallet to 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072?"
+## "prompt": "Please sign message to 'Hi, I'm a human.' "
+## "prompt": "If the account holds more than 5 USDC, lend it to the AAVE protocol. Include the following in the results: - The account's updated collateral status - Transaction hash   - Transaction status"
+## "prompt": "If the Available Borrow Amount of the account is 1 USDC or more, please borrow USDC using it as collateral. Include the following in the results: - The account's updated collateral status - Transaction hash   - Transaction status"
 
-## これは動かないメソッド
-
-### agents APIを呼び出す
-GET {{baseUrl}}/agents
-Authorization:Basic d2ViMy1kZXY6VHJJa051WEJQSg==
-
-{}
