@@ -22,7 +22,8 @@
       "**/contract/artifacts",
       "**/contract/cache",
       "**/contract/test",
-      "**/hardhat.config.ts"
+      "**/hardhat.config.ts",
+      "**/agentkit"
     ]
   },
   "formatter": {

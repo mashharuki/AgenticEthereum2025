@@ -1,0 +1,29 @@
+# API Endpoint
+@baseUrl = http://localhost:3000
+
+### GET /
+GET {{baseUrl}}/
+
+### GET /health
+GET {{baseUrl}}/health
+
+
+### POST /runCdpChatMode
+POST {{baseUrl}}/runCdpChatMode
+Content-Type: application/json
+
+{
+  "prompt": "What is my wallet's balance (ETH & USDC) now?"
+}
+
+## "prompt": "What is my wallet's balance (ETH & USDC) now?"
+## "prompt": "What is my wallet's balance (EURC) now?"
+## "prompt": "What is my wallet's balance (ETH) on Holesky now?"
+## "prompt": "Please tell me abount my account data on AAVE protocol."
+## "prompt": "Please register myTestDomain to basename"
+## "prompt": "Cloud you fund ETH (faucet) to my wallet on base-sepolia?"
+## "prompt": "Cloud you send 0.001ETH from my wallet to 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072?"
+## "prompt": "Please sign message to 'Hi, I'm a human.' "
+## "prompt": "If the account holds more than 1 USDC, lend 1 USDC to the AAVE protocol. Include the following in the results: - The account's updated collateral status - Transaction hash   - Transaction status"
+## "prompt": "If the Available Borrow Amount of the account is 1 USDC or more, please borrow USDC using it as collateral. Include the following in the results: - The account's updated collateral status - Transaction hash   - Transaction status"
+
