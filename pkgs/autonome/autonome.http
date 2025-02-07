@@ -1,13 +1,14 @@
 ## Autonome 用の APIを叩く http リクエスト
-@baseUrl=https://autonome.alt.technology/customcd-xxhupu
+@baseUrl=https://autonome.alt.technology/cdpagent-tinblo
 
 ### POST Request
 POST {{baseUrl}}/runCdpChatMode
 Content-Type: application/json
-Authorization: Basic d2ViMy1kZXY6VHJJa051WEJQSg==
+Authorization: Basic Y2RwYWdlbnQ6elhyZVVoV2xxUw==
+## Authorization: Basic d2ViMy1kZXY6VHJJa051WEJQSg==
 
 {
-  "prompt": "Please sign message to 'Hi, I'm a human.' "
+  "prompt": "If the Available Borrow Amount of the account is 1 USDC or more, please borrow USDC using it as collateral. Include the following in the results: - The account's updated collateral status - Transaction hash   - Transaction status "
 }
 
 ## "prompt": "What is my wallet's balance (ETH & USDC) now?"
