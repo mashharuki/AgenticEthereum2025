@@ -21,6 +21,11 @@ import { useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+// API Endpoinnt
+const AUTONOME_CDP_API_ENDPOINT =
+  process.env.NEXT_PUBLIC_AUTONOME_CDP_API_ENDPOINT;
+const CLOUDRUN_API_ENDPOINT = process.env.NEXT_PUBLIC_CLOUDRUN_API_ENDPOINT;
+
 const ChatAiIcons = [
   {
     icon: CopyIcon,
@@ -41,6 +46,10 @@ interface Message {
   content: string;
 }
 
+/**
+ * Home Component
+ * @returns
+ */
 export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
@@ -48,39 +57,44 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
 
+  /**
+   * handleInputChange
+   * @param e
+   */
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
   };
 
-  useEffect(() => {
-    if (messagesRef.current) {
-      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-    }
-  }, []);
-
-  // ユーザーのメッセージを起点に A→B→C の順番で会話を行う例
+  /**
+   * onSubmit method
+   * @param e
+   * @returns
+   */
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim()) return;
     setIsGenerating(true);
 
-    // ① ユーザーのメッセージを会話に追加
+    // ① Add the user's message to the conversation.
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
 
     try {
-      // ② chatA エンドポイントへリクエスト
-      const responseA = await fetch("/api/chatA", {
+      console.log("userMessage", userMessage.content);
+      // Call Vertex AI Agent endpoints in sequence to simulate a conversation chain.
+      const responseA = await fetch(`${CLOUDRUN_API_ENDPOINT}/agentVertexAI`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [userMessage] }),
+        body: JSON.stringify({ prompt: userMessage.content }),
       });
       const textA = await responseA.json();
-      const aiAMessage = { role: "assistant", content: textA.text };
+      console.log("textA", textA);
+      const aiAMessage = { role: "assistant", content: textA.result };
       setMessages((prev) => [...prev, aiAMessage]);
 
-      // ③ chatB エンドポイントへリクエスト（ユーザーのメッセージ＋Aの返答を渡す）
+      /*
+      // Call Groq AI Agent endpoint to simulate a conversation chain.
       const responseB = await fetch("/api/chatB", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -90,7 +104,7 @@ export default function Home() {
       const aiBMessage = { role: "assistant", content: textB.text };
       setMessages((prev) => [...prev, aiBMessage]);
 
-      // ④ chatC エンドポイントへリクエスト（これまでの会話履歴を渡す）
+      // Call ChatGPT AI Agent endpoint to simulate a conversation chain.
       const responseC = await fetch("/api/chatC", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -101,6 +115,19 @@ export default function Home() {
       const textC = await responseC.json();
       const aiCMessage = { role: "assistant", content: textC.text };
       setMessages((prev) => [...prev, aiCMessage]);
+
+      // Call Autonome CoinBase AI Agent endpoint to simulate a conversation chain.
+      const responseD = await fetch("/api/chatC", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [userMessage, aiAMessage, aiBMessage],
+        }),
+      });
+      const textD = await responseD.json();
+      const aiCMessage2 = { role: "assistant", content: textD.text };
+      setMessages((prev) => [...prev, aiCMessage2]);
+      */
     } catch (error) {
       console.error("Error during conversation chain:", error);
     } finally {
@@ -108,6 +135,11 @@ export default function Home() {
     }
   };
 
+  /**
+   * onKeyDown method
+   * @param e
+   * @returns
+   */
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -117,6 +149,11 @@ export default function Home() {
     }
   };
 
+  /**
+   * handleActionClick method
+   * @param action
+   * @param messageIndex
+   */
   const handleActionClick = async (action: string, messageIndex: number) => {
     console.log("Action clicked:", action, "Message index:", messageIndex);
     if (action === "Refresh") {
@@ -138,6 +175,12 @@ export default function Home() {
       }
     }
   };
+
+  useEffect(() => {
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
+  }, []);
 
   return (
     <main className="flex h-screen w-full max-w-3xl flex-col items-center mx-auto">

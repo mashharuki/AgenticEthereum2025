@@ -8,6 +8,11 @@ import { useWagmiConfig } from "../wagmi";
 
 const queryClient = new QueryClient();
 
+/**
+ * Providers Component
+ * @param props
+ * @returns
+ */
 export function Providers(props: { children: ReactNode }) {
   const wagmiConfig = useWagmiConfig();
 
