@@ -2,12 +2,67 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { runOpenAIAIAgent } from "./lib/agent/OpenAIAgent";
-import { defiAssistantSystemPrompt } from "./lib/agent/config";
+import {
+  analysisAndStrategySpecialistSystemPrompt,
+  defiAssistantSystemPrompt,
+  newsAndFundamentalInformationSpecialistSystemPrompt,
+  performanceMonitoringSpecialistSystemPrompt,
+  riskManagementSpecialistSystemPrompt,
+  socialTrendSpecialistSystemPrompt,
+} from "./lib/agent/config";
 import { runChatGroqAgent } from "./lib/agent/grogAgent";
-import { createDeFiTools, createReserchTools } from "./lib/agent/tools/util";
+import {
+  createDeFiTools,
+  createReserchTools,
+  createanalysisTools,
+} from "./lib/agent/tools/util";
 import { runVertexAIAIAgent } from "./lib/agent/vertexAgent";
 
+// create a new Hono instance
 const app = new Hono();
+
+/**
+ * The system prompt and tools will change based on the operation flag of the argument function.
+ */
+const setUpSystemPromptAndTools = (operation: string) => {
+  switch (operation) {
+    case "DeFi":
+      return {
+        systemPrompt: defiAssistantSystemPrompt,
+        tools: createDeFiTools(),
+      };
+    case "SocialTrend":
+      return {
+        systemPrompt: socialTrendSpecialistSystemPrompt,
+        tools: createReserchTools(),
+      };
+    case "NewsAndFundamentals":
+      return {
+        systemPrompt: newsAndFundamentalInformationSpecialistSystemPrompt,
+        tools: createReserchTools(),
+      };
+    case "RiskManagement":
+      return {
+        systemPrompt: riskManagementSpecialistSystemPrompt,
+        tools: createanalysisTools(),
+      };
+    case "PerformanceMonitoring":
+      return {
+        systemPrompt: performanceMonitoringSpecialistSystemPrompt,
+        tools: createanalysisTools(),
+      };
+    case "AnalysisAndReasoning":
+      return {
+        systemPrompt: analysisAndStrategySpecialistSystemPrompt,
+        tools: createanalysisTools(),
+      };
+    default:
+      return {
+        systemPrompt: defiAssistantSystemPrompt,
+        tools: createDeFiTools(),
+      };
+  }
+};
 
 // CORS configuration
 app.use(
@@ -38,7 +93,7 @@ app.get("/health", (c) => {
  */
 app.post("/agentVertexAI", async (c) => {
   // get prompt from request body
-  const { prompt } = await c.req.json();
+  const { prompt, operation } = await c.req.json();
 
   if (!prompt) {
     return c.json(
@@ -49,12 +104,10 @@ app.post("/agentVertexAI", async (c) => {
     );
   }
 
+  // The system prompt and tools will change based on the operation flag of the argument.
+  const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
   // call runVertexAIAIAgent function
-  const response = await runVertexAIAIAgent(
-    createReserchTools(),
-    defiAssistantSystemPrompt,
-    prompt,
-  );
+  const response = await runVertexAIAIAgent(tools, systemPrompt, prompt);
 
   return c.json({
     result: response,
@@ -66,7 +119,7 @@ app.post("/agentVertexAI", async (c) => {
  */
 app.post("/runChatGroqAgent", async (c) => {
   // get prompt from request body
-  const { prompt } = await c.req.json();
+  const { prompt, operation } = await c.req.json();
 
   if (!prompt) {
     return c.json(
@@ -77,12 +130,10 @@ app.post("/runChatGroqAgent", async (c) => {
     );
   }
 
+  // The system prompt and tools will change based on the operation flag of the argument.
+  const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
   // call runChatGroqAgent function
-  const response = await runChatGroqAgent(
-    createReserchTools(),
-    defiAssistantSystemPrompt,
-    prompt,
-  );
+  const response = await runChatGroqAgent(tools, systemPrompt, prompt);
 
   return c.json({
     result: response,
@@ -94,7 +145,7 @@ app.post("/runChatGroqAgent", async (c) => {
  */
 app.post("/runCryptOpenAIAgent", async (c) => {
   // get prompt from request body
-  const { prompt } = await c.req.json();
+  const { prompt, operation } = await c.req.json();
 
   if (!prompt) {
     return c.json(
@@ -105,12 +156,10 @@ app.post("/runCryptOpenAIAgent", async (c) => {
     );
   }
 
+  // The system prompt and tools will change based on the operation flag of the argument.
+  const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
   // runOpenAIAIAgent メソッドを呼び出す。
-  const response = await runOpenAIAIAgent(
-    createDeFiTools(),
-    defiAssistantSystemPrompt,
-    prompt,
-  );
+  const response = await runOpenAIAIAgent(tools, systemPrompt, prompt);
 
   return c.json({
     result: response,

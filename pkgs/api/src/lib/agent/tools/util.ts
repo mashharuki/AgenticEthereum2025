@@ -84,3 +84,22 @@ export const createReserchTools = () => {
   const toolNode = new ToolNode(tools);
   return toolNode;
 };
+
+/**
+ * create Analysis and Reasoning tools for the Assistant AI Agent
+ */
+export const createanalysisTools = () => {
+  // get tools
+  const tools = [
+    search,
+    getTrendingTokens,
+    getTokenBalance,
+    getUserAccountData,
+    getEthAndStEthBalances,
+    getTokenBalanceForArbitrumSepolia,
+    getUserAccountDataForArbitrumSepolia,
+  ];
+
+  const toolNode = new ToolNode(tools);
+  return toolNode;
+};
