@@ -30,7 +30,7 @@ export function TipButton() {
         onClick={() => setIsModalOpen(true)}
         className="bg-blue-600 text-white text-lg py-2.5 px-4 rounded-md hover:bg-blue-700"
       >
-        Tip
+        Reward AI🤖
       </button>
       {isModalOpen && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
