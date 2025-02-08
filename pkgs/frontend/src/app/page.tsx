@@ -152,6 +152,7 @@ export default function Home() {
 
       // concat the messages
       const newMessage = textC.result.concat(textD.result[1]);
+      console.log("newMessage", newMessage);
 
       // ⑤ call Groq Agent endpoint to PerformanceMonitoring
       const responseE = await fetch(

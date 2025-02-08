@@ -22,9 +22,10 @@ export const socialTrendSpecialistSystemPrompt = `
     Present key points in bullet points or concise report format to share the latest market sentiment with the team.
 
   [Output Examples]
-   - Trend1: {}
-   - Trend2: {}
-   - Trend3: {}
+    Always provide the output in this format:
+    - Trend1: {}
+    - Trend2: {}
+    - Trend3: {}
 
   Based on these points, please create swift and accurate reports for the cryptocurrency investment team.
 `;
@@ -49,9 +50,10 @@ export const newsAndFundamentalInformationSpecialistSystemPrompt = `
    Summarize fundamental aspects, such as long-term development plans and community engagement, in an easy-to-understand manner.
 
   [Output Examples]
-   - News1: {}
-   - News2: {}
-   - News3: {}
+    Always provide the output in this format:
+    - News1: {}
+    - News2: {}
+    - News3: {}
 
   Organize this information clearly and create reports to assist the Analysis and Strategy Specialist in making informed decisions.
 `;
@@ -75,9 +77,10 @@ export const riskManagementSpecialistSystemPrompt = `
    Suggest specific actions to take if gas fees rise or if market instability increases.
 
   [Output Examples]
-   - riskFactor: {Description of the risk}
-   - suggestedMitigation: {Suggested risk mitigation measures}
-   - adjustment: {Proposed adjustment to the strategy}
+    Always provide the output in this format:
+    - riskFactor: {Description of the risk}
+    - suggestedMitigation: {Suggested risk mitigation measures}
+    - adjustment: {Proposed adjustment to the strategy}
 `;
 
 // system prompt for the Analysis and Strategy Specialist
@@ -99,7 +102,7 @@ export const performanceMonitoringSpecialistSystemPrompt = `
     Identify portfolio imbalances or excessive risk and suggest corrective actions.
 
   [Output Examples]
-    transactionStatus: {Success/Failure, Transaction Hash}
+    Always provide the output in this format:
     KPI: {Profit margin, fees, lending rates, etc.}
     suggestedImprovement: {Suggested improvements to the strategy}
 `;
@@ -125,10 +128,13 @@ export const analysisAndStrategySpecialistSystemPrompt = `
    Provide specific recommendations on how much capital should be allocated, depending on the risk tolerance (e.g., allocate X% of funds to ETH staking, Y% to lending, etc.).
 
   [Output Examples]
-   blockchain: {Blockchain Name}
-   operation: {Operation Type}
-   tokenName: {Token Name}
-   amount: {Amount}
+    Always provide the output in this JSON format:
+    {
+      "blockchain": "{Blockchain Name}",
+      "operation": "{Operation Type}",
+      "tokenName": "{Token Name}",
+      "amount": "{Amount}"
+    }
 
    Present these analyses clearly and provide the Execution Agent with the necessary transaction instructions.
 `;
@@ -155,9 +161,9 @@ export const defiAssistantSystemPrompt = `
     In case of transaction failures or errors, retry the operation, investigate the issue, and report it to the Analysis Agent.
 
   [Output Examples]
-    "Swap executed on Uniswap: ETH → ABC token. Tx Hash: 0x... Gas fee: 0.0012 ETH."
-    "Staked 5 ETH on Lido. Estimated reward rate: 4% APR."
-    "Lent 10,000 USDC on Aave. Interest rate: 2.5% APR. Portfolio breakdown is as follows: ..."
+    Always provide the output in this format:
+    - transactionStatus: {Success/Failure}
+    - transactionHash: {Transaction Hash}
 
 
   Before executing any operation, ensure the correct network (Sepolia or Holesky or Arbitrum Sepolia) is selected.
