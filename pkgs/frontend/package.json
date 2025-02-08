@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.1.9",
-    "@coinbase/onchainkit": "^0.36.9",
+    "@coinbase/onchainkit": "latest",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.1",
     "@tanstack/react-query": "^5.66.0",

@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { useAutoScroll } from "@/components/ui/chat/hooks/useAutoScroll";
 import { ArrowDown } from "lucide-react";
