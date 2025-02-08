@@ -15,7 +15,13 @@ import { useAccount } from "wagmi";
 import { Modal } from "./Modal";
 
 export function TipButton() {
+  const { address } = useAccount();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // アドレスがない場合は何も表示しない
+  if (!address) {
+    return null;
+  }
 
   return (
     <>
@@ -26,9 +32,11 @@ export function TipButton() {
       >
         Tip
       </button>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <TipContent onComplete={() => setIsModalOpen(false)} />
-      </Modal>
+      {isModalOpen && (
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <TipContent onComplete={() => setIsModalOpen(false)} />
+        </Modal>
+      )}
     </>
   );
 }
@@ -41,6 +49,7 @@ function TipContent({ onComplete }: { onComplete: () => void }) {
   const { address } = useAccount();
 
   const maskedRecipientAddress = (): string => {
+    if (!recipientAddress) return "";
     const start = recipientAddress.slice(0, 4);
     const end = recipientAddress.slice(-4);
     return `${start}...${end}`;
@@ -57,7 +66,7 @@ function TipContent({ onComplete }: { onComplete: () => void }) {
     [onComplete],
   );
 
-  const generateTransaction = useCallback(() => {
+  const generateTransaction = useCallback(async () => {
     if (!amount || !recipientAddress) {
       throw new Error("送金額と送金先アドレスを入力してください");
     }
@@ -66,70 +75,66 @@ function TipContent({ onComplete }: { onComplete: () => void }) {
       {
         to: recipientAddress as `0x${string}`,
         value: parseEther(amount),
-        data: "0x",
+        data: "0x" as const,
       },
     ];
   }, [amount, recipientAddress]);
 
+  if (!address) {
+    return null;
+  }
+
   return (
     <div className="p-6">
-      {address && (
-        <div className="space-y-4">
-          <div>
-            <label
-              className="block text-sm font-medium text-gray-700 mb-2"
-              htmlFor="recipient"
-            >
-              AI Agent Reciepient Address
-            </label>
-            <input
-              name="recipient"
-              type="text"
-              value={maskedRecipientAddress()}
-              readOnly={true}
-              className="w-full px-3 py-2"
-            />
-          </div>
-
-          <div>
-            <label
-              className="block text-sm font-medium text-gray-700 mb-2"
-              htmlFor="amount"
-            >
-              Tip Amount (ETH)
-            </label>
-            <input
-              name="amount"
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.01"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              step="0.000000000000000001"
-              min="0"
-            />
-          </div>
-
-          <Transaction
-            chainId={baseSepolia.id}
-            calls={async () => {
-              const txs = await generateTransaction();
-              return txs.map((tx) => ({
-                ...tx,
-                data: tx.data as `0x${string}`, // Cast string to hex string type
-              }));
-            }}
-            onStatus={handleStatus}
+      <div className="space-y-4">
+        <div>
+          <label
+            className="block text-sm font-medium text-gray-700 mb-2"
+            htmlFor="recipient"
           >
-            <TransactionButton text="Send" className="bg-blue-600" />
-            <TransactionSponsor />
-            <TransactionStatus>
-              <TransactionStatusLabel />
-              <TransactionStatusAction />
-            </TransactionStatus>
-          </Transaction>
+            AI Agent Recipient Address
+          </label>
+          <input
+            name="recipient"
+            type="text"
+            value={maskedRecipientAddress()}
+            readOnly
+            className="w-full px-3 py-2"
+          />
         </div>
-      )}
+
+        <div>
+          <label
+            className="block text-sm font-medium text-gray-700 mb-2"
+            htmlFor="amount"
+          >
+            Tip Amount (ETH)
+          </label>
+          <input
+            name="amount"
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="0.01"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            step="0.000000000000000001"
+            min="0"
+          />
+        </div>
+
+        <Transaction
+          chainId={baseSepolia.id}
+          calls={generateTransaction}
+          onStatus={handleStatus}
+        >
+          <TransactionButton text="Send" className="bg-blue-600" />
+          <TransactionSponsor />
+          <TransactionStatus>
+            <TransactionStatusLabel />
+            <TransactionStatusAction />
+          </TransactionStatus>
+        </Transaction>
+      </div>
     </div>
   );
 }
