@@ -16,7 +16,10 @@ import {
   WalletDropdownLink,
 } from "@coinbase/onchainkit/wallet";
 
-export function WalletComponent() {
+export function WalletComponent({
+  darkMode,
+  setDarkMode,
+}: { darkMode: boolean; setDarkMode: (value: boolean) => void }) {
   return (
     <div className="flex justify-end">
       <Wallet>
@@ -42,8 +45,29 @@ export function WalletComponent() {
           >
             Wallet
           </WalletDropdownLink>
-          <WalletDropdownFundLink />
+          <WalletDropdownFundLink className="hover:bg-blue-200" />
           <WalletDropdownDisconnect className="hover:bg-blue-200" />
+          <label className="flex items-center justify-between cursor-pointer px-4 py-4 hover:bg-blue-200">
+            <span className="text-sm text-gray-700 flex items-center">
+              <span className="mr-1">🌙</span> Dark Mode
+            </span>
+            <span className="relative">
+              <input
+                type="checkbox"
+                checked={darkMode}
+                onChange={() => setDarkMode(!darkMode)}
+                className="hidden"
+              />
+              <span className="block w-10 h-6 bg-gray-300 rounded-full shadow-inner" />
+              <span
+                className={`absolute block w-4 h-4 mt-1 ml-1 rounded-full shadow inset-y-0 left-0 focus-within:shadow-outline transition-transform duration-200 ease-in-out ${
+                  darkMode
+                    ? "transform translate-x-full bg-blue-500"
+                    : "bg-white"
+                }`}
+              />
+            </span>
+          </label>
         </WalletDropdown>
       </Wallet>
     </div>
