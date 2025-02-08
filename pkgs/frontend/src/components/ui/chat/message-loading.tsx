@@ -1,3 +1,4 @@
+"use client";
 // @hidden
 export default function MessageLoading() {
   return (
