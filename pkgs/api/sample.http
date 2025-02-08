@@ -14,15 +14,18 @@ POST {{baseUrl}}/agentVertexAI
 Content-Type: application/json
 
 {
-  "prompt": "Web3に関する最新のニュースを集めてください。",
-  "operation": "NewsAndFundamentals"
+  "prompt": "If I want to grow my assets by swapping, lending, or staking cryptocurrencies, what should I do?",
+  "operation": "SocialTrend"
 }
 
-##  "prompt": "Web3に関する最新のニュースを集めてください。",
-##  "operation": "NewsAndFundamentals"
 ##  "prompt": "Web3に関するトレンド情報を集めてください。",
 ##  "operation": "SocialTrend"
-
+##  "prompt": "Web3に関する最新のニュースを集めてください。",
+##  "operation": "NewsAndFundamentals"
+##  "operation": "RiskManagement"
+##  "operation": "PerformanceMonitoring"
+##  "operation": "AnalysisAndReasoning"
+##  "operation": "DeFi"
 
 ### POST /runChatGroqAgent
 POST {{baseUrl}}/runChatGroqAgent
