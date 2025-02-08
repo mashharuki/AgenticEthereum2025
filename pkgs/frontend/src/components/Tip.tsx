@@ -17,7 +17,6 @@ import { WalletComponent } from "./Wallet";
 
 export function TipButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { address } = useAccount();
 
   return (
     <>
@@ -48,12 +47,16 @@ function TipContent({ onComplete }: { onComplete: () => void }) {
     return `${start}...${end}`;
   };
 
-  const handleStatus = useCallback((status: LifecycleStatus) => {
-    console.log("Transaction status:", status);
-    if (status.statusName === "success") {
-      setAmount("");
-    }
-  }, []);
+  const handleStatus = useCallback(
+    (status: LifecycleStatus) => {
+      console.log("Transaction status:", status);
+      if (status.statusName === "success") {
+        setAmount("");
+        onComplete();
+      }
+    },
+    [onComplete],
+  );
 
   const generateTransaction = useCallback(() => {
     if (!amount || !recipientAddress) {
@@ -115,7 +118,13 @@ function TipContent({ onComplete }: { onComplete: () => void }) {
 
           <Transaction
             chainId={baseSepolia.id}
-            calls={async () => generateTransaction()}
+            calls={async () => {
+              const txs = await generateTransaction();
+              return txs.map((tx) => ({
+                ...tx,
+                data: tx.data as `0x${string}`, // Cast string to hex string type
+              }));
+            }}
             onStatus={handleStatus}
           >
             <TransactionButton text="Send" />
