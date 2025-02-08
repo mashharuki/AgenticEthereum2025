@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npx tsx watch src/index.ts",
     "container:build": "docker build . -t hono-vertexai-image:latest",
-    "container:run": "docker run --env-file .env -p 3000:3000"
+    "container:run": "docker run --env-file .env -p 3000:3000 hono-vertexai-image:latest"
   },
   "dependencies": {
     "@coinbase/agentkit": "^0.1.1",
@@ -16,6 +16,7 @@
     "@google-cloud/vertexai": "^1.9.2",
     "@google/generative-ai": "^0.21.0",
     "@hono/node-server": "^1.13.7",
+    "@langchain/anthropic": "^0.3.13",
     "@langchain/community": "^0.3.21",
     "@langchain/core": "^0.3.27",
     "@langchain/google-genai": "^0.1.6",

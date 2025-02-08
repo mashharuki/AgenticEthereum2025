@@ -86,24 +86,56 @@ export default function Home() {
     try {
       console.log("userMessage", userMessage.content);
 
-      // ① Call Vertex AI Agent endpoints in sequence to simulate a conversation chain.
+      // ① Call Vertex AI Agent endpoints in sequence to social trend analysis.
       const responseA = await fetch(`${CLOUDRUN_API_ENDPOINT}/agentVertexAI`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: userMessage.content }),
+        body: JSON.stringify({
+          prompt: `
+            The following content is input from the user.
+            Based on this input, research the latest trends related to Web3, blockchain, and cryptocurrencies, and provide the results.
+
+            #User Input:
+              ${userMessage.content}
+
+            Additionally, ensure the output is concise and formatted as shown below to be passed as input to the News and Fundamental Information Specialist AI Agent.
+
+            #Output:
+              Trend1: {}
+              Trend2: {}
+              Trend3: {}
+          `,
+          operation: "SocialTrend",
+        }),
       });
       const textA = await responseA.json();
       console.log("textA", textA);
       const aiAMessage = { role: "assistant", content: textA.result };
       setMessages((prev) => [...prev, aiAMessage]);
 
-      // ② Call Groq AI Agent endpoint to simulate a conversation chain.
+      // ② Call Vertex AI Agent endpoint to NewsAndFundamentals analysis.
       const responseB = await fetch(
-        `${CLOUDRUN_API_ENDPOINT}/runChatGroqAgent`,
+        `${CLOUDRUN_API_ENDPOINT}/runAnthropicAIAgent`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: textA.result }),
+          body: JSON.stringify({
+            prompt: `
+            The following content is output from the Social Trend Collection Specialist Agent.
+            Based on this input, research the latest news related to Web3, blockchain, and cryptocurrencies, summarize it concisely, and present only the key points.
+
+            #Input from the Social Trend Collection Specialist Agent:
+              ${textA.result}
+
+            Additionally, ensure the output is concise and formatted as shown below to be passed as input to the Risk Management AI Agent.
+
+            #Output:
+              News1: {}
+              News2: {}
+              News3: {}
+          `,
+            operation: "NewsAndFundamentals",
+          }),
         },
       );
       const textB = await responseB.json();
@@ -111,14 +143,28 @@ export default function Home() {
       const aiBMessage = { role: "assistant", content: textB.result };
       setMessages((prev) => [...prev, aiBMessage]);
 
-      // Call ChatGPT AI Agent endpoint to simulate a conversation chain.
+      // ③ Call Vertex AI Agent endpoint to NewsAndFundamentals analysis.
       const responseC = await fetch(
         `${CLOUDRUN_API_ENDPOINT}/runCryptOpenAIAgent`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            prompt: textB.result,
+            prompt: `
+            The following content is input from the News and Fundamentals Agent.
+            Based on this input and the balance status of your wallet, summarize the potential risks concisely.
+
+            #Input from the News And Fundamentals Agent:
+            ${textB.result}
+
+            Additionally, ensure the output is concise and formatted as shown below to be passed as input to the Performance Monitoring AI Agent.
+
+            #Output:
+             riskFactor: {Description of the risk}
+             suggestedMitigation: {Suggested risk mitigation measures}
+             adjustment: {Proposed adjustment to the strategy}
+          `,
+            operation: "RiskManagement",
           }),
         },
       );
@@ -127,7 +173,7 @@ export default function Home() {
       const aiCMessage = { role: "assistant", content: textC.result };
       setMessages((prev) => [...prev, aiCMessage]);
 
-      // Call Autonome CoinBase AI Agent endpoint to simulate a conversation chain.
+      // ④ Call Autonome CoinBase AI Agent endpoint to get token balance info
       const responseD = await fetch(
         `${AUTONOME_CDP_API_ENDPOINT}/runCdpChatMode`,
         {
@@ -137,7 +183,7 @@ export default function Home() {
             Authorization: "Basic Y2RwYWdlbnQ6elhyZVVoV2xxUw==",
           },
           body: JSON.stringify({
-            prompt: "What is my wallet's balance (EURC) now?",
+            prompt: "What is my wallet's balance (ETH, EURC, USDC) now?",
           }),
         },
       );
@@ -148,6 +194,179 @@ export default function Home() {
       console.log("textD", textD);
       const aiDMessage = { role: "assistant", content: textD.result[1] };
       setMessages((prev) => [...prev, aiDMessage]);
+
+      // concat the messages
+      const newMessage = textC.result.concat(textD.result[1]);
+      console.log("newMessage", newMessage);
+
+      // ⑤ call Anthropic Agent endpoint to AnalysisAndReasoning
+      const responseF = await fetch(
+        `${CLOUDRUN_API_ENDPOINT}/runAnthropicAIAgent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: `
+              The following content is the analysis results from the News and Fundamentals Agent and the Risk Management Agent.
+              Based on this information, decide on only one optimal DeFi operation.
+
+              Input from News and Fundamentals Agent
+              ${textB.result}
+
+              Input from Risk Management Agent
+              ${newMessage}
+
+              Additionally, present the output in the following concise format:
+
+              The blockchain name must be specified from one of the following: base sepolia.
+
+              Only one operation should be specified.
+
+              ※Important※
+              Also, always ensure that the amount for cryptocurrency operations does not exceed your available balance.
+
+              Output:
+              blockchain: {blockchain Name}
+              operation: {Operation Name}
+              tokenName: {Token Name}
+              amount: {Amount}
+            `,
+            operation: "AnalysisAndReasoning",
+          }),
+        },
+      );
+      const textF = await responseF.json();
+      console.log("textF", textF);
+      const aiFMessage = { role: "assistant", content: textF.result };
+      setMessages((prev) => [...prev, aiFMessage]);
+
+      // check contain in the response "base sepolia"
+      const containsKeywordFlg = textF.result
+        .toLowerCase()
+        .includes("base sepolia".toLowerCase());
+
+      // ⑥ call OpenAI Agent or Autonome endpoint to execute defi transaction
+      if (containsKeywordFlg) {
+        // Call Autonome CoinBase AI Agent endpoint to execute defi transaction
+        const responseG = await fetch(
+          `${AUTONOME_CDP_API_ENDPOINT}/runCdpChatMode`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Basic Y2RwYWdlbnQ6elhyZVVoV2xxUw==",
+            },
+            body: JSON.stringify({
+              prompt: `
+                The following content is the analysis result from the Analysis and Reasoning Agent. Based on this information, accurately execute the optimal DeFi operation.
+
+                #Input from Analysis and Reasoning Agent
+                  ${textF.result}
+
+                Additionally, present the output in the following concise format:
+
+                #Output:
+                  Blockchain: {Blockchain Name}
+                  Transaction Result: {Execution Result}
+                  Transaction Hash: {Transaction Hash}
+              `,
+            }),
+          },
+        );
+
+        console.log("responseG", responseG);
+
+        const textG = await responseG.json();
+        console.log("textG", textG);
+        const aiGMessage = { role: "assistant", content: textG.result[1] };
+        setMessages((prev) => [...prev, aiGMessage]);
+
+        // ⑤ call Groq Agent endpoint to PerformanceMonitoring
+        const responseE = await fetch(
+          `${CLOUDRUN_API_ENDPOINT}/runCryptOpenAIAgent`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt: `
+                The following content is input from the Execution and Operation Agent.
+                Please provide a concise analysis based on the transaction results.
+
+                #Input from the Execution and Operation Agent
+                 ${newMessage}
+
+                Additionally, please present the output in the following concise format:
+
+                #Output:
+                 KPI: {Profit margin, fees, lending rates, etc.}
+                 suggestedImprovement: {Suggested improvements to the strategy}
+              `,
+              operation: "PerformanceMonitoring",
+            }),
+          },
+        );
+        const textE = await responseE.json();
+        console.log("textE", textE);
+        const aiEMessage = { role: "assistant", content: textE.result };
+        setMessages((prev) => [...prev, aiEMessage]);
+      } else {
+        // Call ChatGPT AI Agent endpoint to execute defi transaction
+        const responseH = await fetch(
+          `${CLOUDRUN_API_ENDPOINT}/runCryptOpenAIAgent`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt: `
+                The following content is the analysis result from the Analysis and Reasoning Agent. Based on this information, accurately execute the optimal DeFi operation.
+
+                #Input from Analysis and Reasoning Agent
+                  ${textF.result}
+
+                Additionally, present the output in the following concise format:
+
+                #Output:
+                  Blockchain: {Blockchain Name}
+                  Transaction Result: {Execution Result}
+                  Transaction Hash: {Transaction Hash}
+              `,
+            }),
+          },
+        );
+        const textH = await responseH.json();
+        console.log("textH", textH);
+        const aiHMessage = { role: "assistant", content: textH.result };
+        setMessages((prev) => [...prev, aiHMessage]);
+
+        // ⑤ call Groq Agent endpoint to PerformanceMonitoring
+        const responseE = await fetch(
+          `${CLOUDRUN_API_ENDPOINT}/runCryptOpenAIAgent`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt: `
+                The following content is input from the Execution and Operation Agent.
+                Please provide a concise analysis based on the transaction results.
+
+                #Input from the Execution and Operation Agent
+                 ${newMessage}
+
+                Additionally, please present the output in the following concise format:
+
+                #Output:
+                 KPI: {Profit margin, fees, lending rates, etc.}
+                 suggestedImprovement: {Suggested improvements to the strategy}
+              `,
+              operation: "PerformanceMonitoring",
+            }),
+          },
+        );
+        const textE = await responseE.json();
+        console.log("textE", textE);
+        const aiEMessage = { role: "assistant", content: textE.result };
+        setMessages((prev) => [...prev, aiEMessage]);
+      }
     } catch (error) {
       console.error("Error during conversation chain:", error);
     } finally {

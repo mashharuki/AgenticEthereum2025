@@ -1,56 +1,12 @@
 import { HumanMessage } from "@langchain/core/messages";
 import { ChatGroq } from "@langchain/groq";
 import { MemorySaver } from "@langchain/langgraph";
-import { ToolNode, createReactAgent } from "@langchain/langgraph/prebuilt";
+import { type ToolNode, createReactAgent } from "@langchain/langgraph/prebuilt";
 import * as dotenv from "dotenv";
-import {
-  borrowCryptoForArbitrumSepolia,
-  getTokenBalanceForArbitrumSepolia,
-  getUserAccountDataForArbitrumSepolia,
-  lendCryptoForArbitrumSepolia,
-} from "./tools/arbitrumSepolia/aaveTool";
-import { reStake } from "./tools/holesky/eigenlayerTool";
-import {
-  getEthAndStEthBalances,
-  stakeWithLido,
-} from "./tools/holesky/lidoTool";
-import {
-  borrowCrypto,
-  getTokenBalance,
-  getUserAccountData,
-  lendCrypto,
-} from "./tools/sepolia/aaveTool";
-import { swapTokens } from "./tools/sepolia/uniswapTool";
 
 dotenv.config();
 
 const { Groq_API_Key } = process.env;
-
-/**
- * 暗号資産操作用の外部ツールをAI Agentに割り当てられるようにするToolNodeオブジェクトを作成するメソッド
- * @returns
- */
-export const createCryptTools = () => {
-  // 外部ツールを設定
-  const tools = [
-    getTokenBalance,
-    getUserAccountData,
-    lendCrypto,
-    borrowCrypto,
-    swapTokens,
-    getEthAndStEthBalances,
-    stakeWithLido,
-    getTokenBalanceForArbitrumSepolia,
-    getUserAccountDataForArbitrumSepolia,
-    lendCryptoForArbitrumSepolia,
-    borrowCryptoForArbitrumSepolia,
-    reStake,
-  ];
-
-  const toolNode = new ToolNode(tools);
-
-  return toolNode;
-};
 
 /**
  * ChatGroqのAI Agentインスタンスを作成するメソッド

@@ -1,25 +1,73 @@
 import { serve } from "@hono/node-server";
-import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { runOpenAIAIAgent } from "./lib/OpenAIAgent";
-import { runCdpChatMode } from "./lib/cdpAgent";
+import { runOpenAIAIAgent } from "./lib/agent/OpenAIAgent";
+import { runAnthropicAIAgent } from "./lib/agent/anthropicAgent";
 import {
-  cdpAssistantSystemPrompt,
+  analysisAndStrategySpecialistSystemPrompt,
   defiAssistantSystemPrompt,
-  defiBeginnerSystemPrompt,
-  defiProSystemPrompt,
-} from "./lib/config";
-import { createCryptTools, runChatGroqAgent } from "./lib/grogAgent";
-import { getTrendingTokens } from "./lib/tools/coinGeckoTool";
-import { search } from "./lib/tools/util";
-import { runVertexAIAIAgent } from "./lib/vertexAgent";
+  newsAndFundamentalInformationSpecialistSystemPrompt,
+  performanceMonitoringSpecialistSystemPrompt,
+  riskManagementSpecialistSystemPrompt,
+  socialTrendSpecialistSystemPrompt,
+} from "./lib/agent/config";
+import { runChatGroqAgent } from "./lib/agent/grogAgent";
+import {
+  createDeFiTools,
+  createReserchTools,
+  createanalysisTools,
+} from "./lib/agent/tools/util";
+import { runVertexAIAIAgent } from "./lib/agent/vertexAgent";
 
+// create a new Hono instance
 const app = new Hono();
 
-// CORSの設定
+/**
+ * The system prompt and tools will change based on the operation flag of the argument function.
+ */
+const setUpSystemPromptAndTools = (operation: string) => {
+  switch (operation) {
+    case "DeFi":
+      return {
+        systemPrompt: defiAssistantSystemPrompt,
+        tools: createDeFiTools(),
+      };
+    case "SocialTrend":
+      return {
+        systemPrompt: socialTrendSpecialistSystemPrompt,
+        tools: createReserchTools(),
+      };
+    case "NewsAndFundamentals":
+      return {
+        systemPrompt: newsAndFundamentalInformationSpecialistSystemPrompt,
+        tools: createReserchTools(),
+      };
+    case "RiskManagement":
+      return {
+        systemPrompt: riskManagementSpecialistSystemPrompt,
+        tools: createanalysisTools(),
+      };
+    case "PerformanceMonitoring":
+      return {
+        systemPrompt: performanceMonitoringSpecialistSystemPrompt,
+        tools: createanalysisTools(),
+      };
+    case "AnalysisAndReasoning":
+      return {
+        systemPrompt: analysisAndStrategySpecialistSystemPrompt,
+        tools: createanalysisTools(),
+      };
+    default:
+      return {
+        systemPrompt: defiAssistantSystemPrompt,
+        tools: createDeFiTools(),
+      };
+  }
+};
+
+// CORS configuration
 app.use(
-  "*", // 全てのエンドポイントに適用
+  "*",
   cors({
     origin: "*",
     allowMethods: ["GET", "POST", "PUT", "DELETE"],
@@ -27,15 +75,12 @@ app.use(
   }),
 );
 
-/**
- * デフォルトのメソッド
- */
 app.get("/", (c) => {
   return c.text("Hello, World!");
 });
 
 /**
- * ヘルスチェックメソッド
+ * Health Check API
  */
 app.get("/health", (c) => {
   return c.json({
@@ -45,13 +90,12 @@ app.get("/health", (c) => {
 });
 
 /**
- * Vertex AI のLLMを使ったAIAgentのサンプルメソッドを呼び出す
+ * Call Vertex AI Agent function
  */
 app.post("/agentVertexAI", async (c) => {
-  // リクエストボディからプロンプトを取得
-  const { prompt } = await c.req.json();
+  // get prompt from request body
+  const { prompt, operation } = await c.req.json();
 
-  // プロンプトが存在しない場合にエラーハンドリング
   if (!prompt) {
     return c.json(
       {
@@ -61,12 +105,10 @@ app.post("/agentVertexAI", async (c) => {
     );
   }
 
-  // runVertexAIAIAgentメソッドを呼び出す。
-  const response = await runVertexAIAIAgent(
-    createCryptTools(),
-    defiAssistantSystemPrompt,
-    prompt,
-  );
+  // The system prompt and tools will change based on the operation flag of the argument.
+  const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
+  // call runVertexAIAIAgent function
+  const response = await runVertexAIAIAgent(tools, systemPrompt, prompt);
 
   return c.json({
     result: response,
@@ -74,38 +116,12 @@ app.post("/agentVertexAI", async (c) => {
 });
 
 /**
- * CDP AgentKitを使ったAIのメソッドを呼び出すメソッド
- */
-app.post("/runCdpChatMode", async (c) => {
-  // リクエストボディからプロンプトを取得
-  const { prompt } = await c.req.json();
-
-  // プロンプトが存在しない場合にエラーハンドリング
-  if (!prompt) {
-    return c.json(
-      {
-        error: "Prompt is required",
-      },
-      400,
-    );
-  }
-
-  const response = await runCdpChatMode(cdpAssistantSystemPrompt, prompt);
-
-  return c.json({
-    result: response,
-  });
-});
-
-/**
- * Chat Groq Agentを使ったAIのメソッドを呼び出す。
- * ツールの設定は、lib/chatGrog.tsに記述されている。
+ * call ChatGrogAgent function
  */
 app.post("/runChatGroqAgent", async (c) => {
-  // リクエストボディからプロンプトを取得
-  const { prompt } = await c.req.json();
+  // get prompt from request body
+  const { prompt, operation } = await c.req.json();
 
-  // プロンプトが存在しない場合にエラーハンドリング
   if (!prompt) {
     return c.json(
       {
@@ -115,12 +131,10 @@ app.post("/runChatGroqAgent", async (c) => {
     );
   }
 
-  // runChatGroqAgentメソッドを呼び出す。
-  const response = await runChatGroqAgent(
-    createCryptTools(),
-    defiAssistantSystemPrompt,
-    prompt,
-  );
+  // The system prompt and tools will change based on the operation flag of the argument.
+  const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
+  // call runChatGroqAgent function
+  const response = await runChatGroqAgent(tools, systemPrompt, prompt);
 
   return c.json({
     result: response,
@@ -128,13 +142,12 @@ app.post("/runChatGroqAgent", async (c) => {
 });
 
 /**
- * OpenAI のLLMを使ったAIAgentのサンプルメソッドを呼び出す
+ * call OpenAIAIAgent function
  */
 app.post("/runCryptOpenAIAgent", async (c) => {
-  // リクエストボディからプロンプトを取得
-  const { prompt } = await c.req.json();
+  // get prompt from request body
+  const { prompt, operation } = await c.req.json();
 
-  // プロンプトが存在しない場合にエラーハンドリング
   if (!prompt) {
     return c.json(
       {
@@ -144,12 +157,10 @@ app.post("/runCryptOpenAIAgent", async (c) => {
     );
   }
 
+  // The system prompt and tools will change based on the operation flag of the argument.
+  const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
   // runOpenAIAIAgent メソッドを呼び出す。
-  const response = await runOpenAIAIAgent(
-    createCryptTools(),
-    defiAssistantSystemPrompt,
-    prompt,
-  );
+  const response = await runOpenAIAIAgent(tools, systemPrompt, prompt);
 
   return c.json({
     result: response,
@@ -157,13 +168,12 @@ app.post("/runCryptOpenAIAgent", async (c) => {
 });
 
 /**
- * マルチAI Agentでライブディスカッションさせるメソッド
+ * call AnthropicAIAgent function
  */
-app.post("/discussion", async (c) => {
-  // リクエストボディからプロンプトを取得
-  const { prompt } = await c.req.json();
+app.post("/runAnthropicAIAgent", async (c) => {
+  // get prompt from request body
+  const { prompt, operation } = await c.req.json();
 
-  // プロンプトが存在しない場合にエラーハンドリング
   if (!prompt) {
     return c.json(
       {
@@ -173,58 +183,13 @@ app.post("/discussion", async (c) => {
     );
   }
 
-  // groqAgentに渡すツールを設定
-  const proTool = [search, getTrendingTokens];
-  const proTools = new ToolNode(proTool);
-
-  // runChatGroqAgent(ここではDeFiに詳しいプロの投資家)メソッドを呼び出す。
-  const groqResponse = await runChatGroqAgent(
-    proTools,
-    defiProSystemPrompt,
-    prompt,
-  );
-
-  // VertexAIに渡すツールを設定
-  const biggnerTool = [search];
-  const biggnerTools = new ToolNode(biggnerTool);
-
-  // runVertexAIAIAgent(ここではDeFi初心者)メソッドを呼び出す。
-  const vertexResponse = await runVertexAIAIAgent(
-    biggnerTools,
-    defiBeginnerSystemPrompt,
-    groqResponse.toString(),
-  );
-
-  // もう一回プロの投資家AI Agentの機能を呼び出す。
-  // 初心者の質問に対して、プロの投資家が回答する。
-  const groqResponse2 = await runChatGroqAgent(
-    proTools,
-    defiProSystemPrompt,
-    `
-      Below are questions from a DeFi beginner who is eager to understand complex concepts.
-      Please provide clear, simple, and beginner-friendly answers, breaking down technical terms where necessary.
-      Aim to educate and build confidence in their learning journey.
-
-      Here are the questions:
-      ${vertexResponse}
-
-      Please explain your answers in a way that a beginner would understand, using examples when possible.
-      If additional context or resources would be helpful, please mention them as well.
-    `,
-  );
-
+  // The system prompt and tools will change based on the operation flag of the argument.
+  const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
   // runOpenAIAIAgent メソッドを呼び出す。
-  const openAIresponse = await runOpenAIAIAgent(
-    createCryptTools(),
-    defiAssistantSystemPrompt,
-    groqResponse2.toString(),
-  );
+  const response = await runAnthropicAIAgent(tools, systemPrompt, prompt);
 
   return c.json({
-    groqResult: groqResponse,
-    vertexResult: vertexResponse,
-    groqResponse2: groqResponse2,
-    OpenAIResult: openAIresponse,
+    result: response,
   });
 });
 
