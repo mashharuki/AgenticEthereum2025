@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npx tsx watch src/index.ts",
     "container:build": "docker build . -t hono-vertexai-image:latest",
-    "container:run": "docker run --env-file .env -p 3000:3000"
+    "container:run": "docker run --env-file .env -p 3000:3000 hono-vertexai-image:latest"
   },
   "dependencies": {
     "@coinbase/agentkit": "^0.1.1",

@@ -3,7 +3,10 @@ import * as dotenv from "dotenv";
 import { http, createPublicClient, createWalletClient, parseUnits } from "viem";
 import { arbitrumSepolia } from "viem/chains";
 import { z } from "zod";
-import { createPrivyViemAccount, createPrivyWallet } from "../../wallet/privy";
+import {
+  createPrivyViemAccount,
+  createPrivyWallet,
+} from "../../../wallet/privy";
 import { AAVE_LENDING_POOL_ABI_TESTNET } from "../abis/aave_lending_pool_abi_testnet";
 import { ERC20_ABI } from "../abis/erc20_abi";
 

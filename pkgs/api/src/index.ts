@@ -1,11 +1,11 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { runOpenAIAIAgent } from "./lib/OpenAIAgent";
-import { defiAssistantSystemPrompt } from "./lib/config";
-import { runChatGroqAgent } from "./lib/grogAgent";
-import { createDeFiTools, createReserchTools } from "./lib/tools/util";
-import { runVertexAIAIAgent } from "./lib/vertexAgent";
+import { runOpenAIAIAgent } from "./lib/agent/OpenAIAgent";
+import { defiAssistantSystemPrompt } from "./lib/agent/config";
+import { runChatGroqAgent } from "./lib/agent/grogAgent";
+import { createDeFiTools, createReserchTools } from "./lib/agent/tools/util";
+import { runVertexAIAIAgent } from "./lib/agent/vertexAgent";
 
 const app = new Hono();
 

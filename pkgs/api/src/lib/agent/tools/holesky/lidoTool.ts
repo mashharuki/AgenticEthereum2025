@@ -10,7 +10,10 @@ import {
 } from "viem";
 import { holesky } from "viem/chains";
 import { z } from "zod";
-import { createPrivyViemAccount, createPrivyWallet } from "../../wallet/privy";
+import {
+  createPrivyViemAccount,
+  createPrivyWallet,
+} from "../../../wallet/privy";
 import { ERC20_ABI } from "../abis/erc20_abi";
 
 dotenv.config();
