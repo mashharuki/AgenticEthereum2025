@@ -82,7 +82,8 @@ export default function Home() {
 
     try {
       console.log("userMessage", userMessage.content);
-      // Call Vertex AI Agent endpoints in sequence to simulate a conversation chain.
+
+      // ① Call Vertex AI Agent endpoints in sequence to simulate a conversation chain.
       const responseA = await fetch(`${CLOUDRUN_API_ENDPOINT}/agentVertexAI`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -93,41 +94,57 @@ export default function Home() {
       const aiAMessage = { role: "assistant", content: textA.result };
       setMessages((prev) => [...prev, aiAMessage]);
 
-      /*
-      // Call Groq AI Agent endpoint to simulate a conversation chain.
-      const responseB = await fetch("/api/chatB", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [userMessage, aiAMessage] }),
-      });
+      // ② Call Groq AI Agent endpoint to simulate a conversation chain.
+      const responseB = await fetch(
+        `${CLOUDRUN_API_ENDPOINT}/runChatGroqAgent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: textA.result }),
+        },
+      );
       const textB = await responseB.json();
-      const aiBMessage = { role: "assistant", content: textB.text };
+      console.log("textB", textB);
+      const aiBMessage = { role: "assistant", content: textB.result };
       setMessages((prev) => [...prev, aiBMessage]);
 
       // Call ChatGPT AI Agent endpoint to simulate a conversation chain.
-      const responseC = await fetch("/api/chatC", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [userMessage, aiAMessage, aiBMessage],
-        }),
-      });
+      const responseC = await fetch(
+        `${CLOUDRUN_API_ENDPOINT}/runCryptOpenAIAgent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: textB.result,
+          }),
+        },
+      );
       const textC = await responseC.json();
-      const aiCMessage = { role: "assistant", content: textC.text };
+      console.log("textC", textC);
+      const aiCMessage = { role: "assistant", content: textC.result };
       setMessages((prev) => [...prev, aiCMessage]);
 
       // Call Autonome CoinBase AI Agent endpoint to simulate a conversation chain.
-      const responseD = await fetch("/api/chatC", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [userMessage, aiAMessage, aiBMessage],
-        }),
-      });
+      const responseD = await fetch(
+        `${AUTONOME_CDP_API_ENDPOINT}/runCdpChatMode`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic Y2RwYWdlbnQ6elhyZVVoV2xxUw==",
+          },
+          body: JSON.stringify({
+            prompt: "What is my wallet's balance (EURC) now?",
+          }),
+        },
+      );
+
+      console.log("responseD", responseD);
+
       const textD = await responseD.json();
-      const aiCMessage2 = { role: "assistant", content: textD.text };
-      setMessages((prev) => [...prev, aiCMessage2]);
-      */
+      console.log("textD", textD);
+      const aiDMessage = { role: "assistant", content: textD.result[1] };
+      setMessages((prev) => [...prev, aiDMessage]);
     } catch (error) {
       console.error("Error during conversation chain:", error);
     } finally {

@@ -8,7 +8,7 @@ Authorization: Basic Y2RwYWdlbnQ6elhyZVVoV2xxUw==
 ## Authorization: Basic d2ViMy1kZXY6VHJJa051WEJQSg==
 
 {
-  "prompt": "If the Available Borrow Amount of the account is 1 USDC or more, please borrow USDC using it as collateral. Include the following in the results: - The account's updated collateral status - Transaction hash   - Transaction status "
+  "prompt": "What is my wallet's balance (EURC) now?"
 }
 
 ## "prompt": "What is my wallet's balance (ETH & USDC) now?"
