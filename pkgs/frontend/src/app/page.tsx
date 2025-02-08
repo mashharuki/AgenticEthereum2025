@@ -295,7 +295,7 @@ export default function Home() {
                   disabled={!input || isGenerating}
                   type="submit"
                   size="sm"
-                  className="ml-auto gap-1.5 bg-blue-600 hover:bg-blue-700"
+                  className="ml-auto gap-1.5 bg-yellow-400 hover:bg-yellow-500 text-black"
                 >
                   Send Message
                   <CornerDownLeft className="size-3.5" />

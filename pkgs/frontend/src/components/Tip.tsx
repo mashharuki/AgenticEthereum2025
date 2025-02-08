@@ -28,7 +28,7 @@ export function TipButton() {
     <>
       <Button
         onClick={() => setIsModalOpen(true)}
-        className="bg-blue-600 text-white text-lg py-5 px-4 rounded-md hover:bg-blue-700"
+        className="bg-gray-100 text-black text-lg py-5 px-4 rounded-md hover:bg-gray-200"
       >
         Reward AI 🤖
       </Button>
@@ -121,18 +121,24 @@ export function TipButton() {
             />
           </div>
 
-          <Transaction
-            chainId={baseSepolia.id}
-            calls={generateTransaction}
-            onStatus={handleStatus}
-          >
-            <TransactionButton text="Send" className="bg-blue-600" />
-            <TransactionSponsor />
-            <TransactionStatus>
-              <TransactionStatusLabel />
-              <TransactionStatusAction />
-            </TransactionStatus>
-          </Transaction>
+          <div>
+            <Transaction
+              chainId={baseSepolia.id}
+              calls={generateTransaction}
+              onStatus={handleStatus}
+              className="text-black"
+            >
+              <TransactionButton
+                text="Send Reward🔥"
+                className="text-black bg-red-500 hover:bg-red-600"
+              />
+              <TransactionSponsor />
+              <TransactionStatus>
+                <TransactionStatusLabel />
+                <TransactionStatusAction />
+              </TransactionStatus>
+            </Transaction>
+          </div>
         </div>
       </div>
     );
