@@ -1,7 +1,7 @@
 # API Endpoint
-# @baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3000
 # ここは各自デプロイした結果によって異なります。
-@baseUrl = https://hono-vertexai-image-tbj5qgjmvq-uc.a.run.app
+# @baseUrl = https://hono-vertexai-image-tbj5qgjmvq-uc.a.run.app
 
 ### GET /
 GET {{baseUrl}}/
@@ -14,15 +14,14 @@ POST {{baseUrl}}/agentVertexAI
 Content-Type: application/json
 
 {
-  "prompt": "Web3に関するトレンド情報を集めてください。",
-  "operation": "SocialTrend"
+  "prompt": "Web3に関する最新のニュースを集めてください。",
+  "operation": "NewsAndFundamentals"
 }
 
-
-##{
 ##  "prompt": "Web3に関する最新のニュースを集めてください。",
 ##  "operation": "NewsAndFundamentals"
-##}
+##  "prompt": "Web3に関するトレンド情報を集めてください。",
+##  "operation": "SocialTrend"
 
 
 ### POST /runChatGroqAgent
@@ -43,7 +42,8 @@ POST {{baseUrl}}/runCryptOpenAIAgent
 Content-Type: application/json
 
 {
-  "prompt": "アカウントが Holeskyで 1stETH以上保有している場合、 1stETHをリステーキングしてください。 結果に以下を含めてください: - アカウントの新しい担保状況 - トランザクションハッシュ - トランザクションステータス"
+  "prompt": "Web3に関する最新のニュースを集めてください。",
+  "operation": "NewsAndFundamentals"
 }
 
 ## "prompt": "アカウントが Arbitrum Sepolia ネットワークで 5 USDC以上保有している場合、 5 USDCを貸し出してください。 結果に以下を含めてください: - アカウントの新しい担保状況 - トランザクションハッシュ - トランザクションステータス"

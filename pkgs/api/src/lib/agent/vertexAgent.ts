@@ -36,7 +36,7 @@ export const createVertexAIAIAgent = (systemPrompt: string) => {
 
   // Instantiate Gemini models
   const agent = vertexAI.getGenerativeModel({
-    model: "gemini-pro",
+    model: "gemini-1.5-flash",
     safetySettings: [
       {
         category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
