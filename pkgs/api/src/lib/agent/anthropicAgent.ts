@@ -26,7 +26,7 @@ export const createAnthropicAIAgent = (
       apiKey: ANTHROPIC_KEY_API,
     });
 
-  // AI Agent用のインスタンスをs
+  // AI Agent用のインスタンスを生成
   const agent = createReactAgent({
     llm: agentModel,
     tools: agentTools,
