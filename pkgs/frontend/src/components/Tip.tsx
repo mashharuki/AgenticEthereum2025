@@ -13,7 +13,6 @@ import { parseEther } from "viem";
 import { baseSepolia } from "viem/chains";
 import { useAccount } from "wagmi";
 import { Modal } from "./Modal";
-import { WalletComponent } from "./Wallet";
 
 export function TipButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +22,7 @@ export function TipButton() {
       <button
         type="button"
         onClick={() => setIsModalOpen(true)}
-        className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+        className="bg-blue-600 text-white text-lg py-2.5 px-4 rounded-md hover:bg-blue-700"
       >
         Tip
       </button>
@@ -74,11 +73,6 @@ function TipContent({ onComplete }: { onComplete: () => void }) {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Tip</h1>
-        <WalletComponent />
-      </div>
-
       {address && (
         <div className="space-y-4">
           <div>
@@ -86,7 +80,7 @@ function TipContent({ onComplete }: { onComplete: () => void }) {
               className="block text-sm font-medium text-gray-700 mb-2"
               htmlFor="recipient"
             >
-              送金先アドレス
+              AI Agent Reciepient Address
             </label>
             <input
               name="recipient"
@@ -102,7 +96,7 @@ function TipContent({ onComplete }: { onComplete: () => void }) {
               className="block text-sm font-medium text-gray-700 mb-2"
               htmlFor="amount"
             >
-              送金額 (ETH)
+              Tip Amount (ETH)
             </label>
             <input
               name="amount"
@@ -127,7 +121,7 @@ function TipContent({ onComplete }: { onComplete: () => void }) {
             }}
             onStatus={handleStatus}
           >
-            <TransactionButton text="Send" />
+            <TransactionButton text="Send" className="bg-blue-600" />
             <TransactionSponsor />
             <TransactionStatus>
               <TransactionStatusLabel />
