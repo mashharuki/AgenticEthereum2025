@@ -17,25 +17,6 @@ Content-Type: application/json
   "prompt": "アカウントが sepolia ネットワークで50 USDC以上の USDCを保有している場合、 WETHにSwapしてください。 結果に以下を含めてください: - アカウントの新しい担保状況 - トランザクションハッシュ - トランザクションステータス"
 }
 
-### POST /runCdpChatMode
-POST {{baseUrl}}/runCdpChatMode
-Content-Type: application/json
-
-{
-  "prompt": "If the account holds more than 5 USDC, lend it to the AAVE protocol. Include the following in the results: - The account's updated collateral status - Transaction hash   - Transaction status"
-}
-
-## "prompt": "What is my wallet's balance (ETH & USDC) now?"
-## "prompt": "What is my wallet's balance (EURC) now?"
-## "prompt": "What is my wallet's balance (ETH) on Holesky now?"
-## "prompt": "Please tell me abount my account data on AAVE protocol."
-## "prompt": "Please register myTestDomain to basename"
-## "prompt": "Cloud you fund ETH (faucet) to my wallet on base-sepolia?"
-## "prompt": "Cloud you send 0.001ETH from my wallet to 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072?"
-## "prompt": "Please sign message to 'Hi, I'm a human.' "
-## "prompt": "If the account holds more than 5 USDC, lend it to the AAVE protocol. Include the following in the results: - The account's updated collateral status - Transaction hash   - Transaction status"
-## "prompt": "If the Available Borrow Amount of the account is 1 USDC or more, please borrow USDC using it as collateral. Include the following in the results: - The account's updated collateral status - Transaction hash   - Transaction status"
-
 ### POST /runChatGroqAgent
 POST {{baseUrl}}/runChatGroqAgent
 Content-Type: application/json
@@ -59,13 +40,3 @@ Content-Type: application/json
 
 ## "prompt": "アカウントが Arbitrum Sepolia ネットワークで 5 USDC以上保有している場合、 5 USDCを貸し出してください。 結果に以下を含めてください: - アカウントの新しい担保状況 - トランザクションハッシュ - トランザクションステータス"
 ## "prompt": "アカウントが Holeskyで 1stETH以上保有している場合、 1stETHをリステーキングしてください。 結果に以下を含めてください: - アカウントの新しい担保状況 - トランザクションハッシュ - トランザクションステータス"
-
-### POST /discussion
-POST {{baseUrl}}/discussion
-Content-Type: application/json
-
-{
-  "prompt": "私は、 sepoliaとholeskyでいくらか暗号資産を保有しています。過去24時間の暗号資産のトレンド状況を踏まえたら、自分の資産を一番効率的に増やすためには何をしたら良いでしょうか？"
-}
-
-##  "prompt": "私は、 sepoliaとholeskyでいくらか暗号資産を保有しています。今、自分の資産を一番効率的に増やすためには何をしたら良いでしょうか？"

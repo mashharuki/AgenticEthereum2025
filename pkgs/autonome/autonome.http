@@ -8,7 +8,7 @@ Authorization: Basic Y2RwYWdlbnQ6elhyZVVoV2xxUw==
 ## Authorization: Basic d2ViMy1kZXY6VHJJa051WEJQSg==
 
 {
-  "prompt": "What is my wallet's balance (EURC) now?"
+  "prompt": "What is my wallet's address?"
 }
 
 ## "prompt": "What is my wallet's balance (ETH & USDC) now?"
