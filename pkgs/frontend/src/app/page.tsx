@@ -229,7 +229,7 @@ export default function Home() {
                   >
                     <ChatBubbleAvatar
                       src=""
-                      fallback={message.role === "user" ? "👨🏽" : "🤖"}
+                      fallback={message.role === "user" ? "👤" : "🤖"}
                     />
                     <ChatBubbleMessage>
                       {message.content
