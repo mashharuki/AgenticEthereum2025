@@ -2,6 +2,7 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { runOpenAIAIAgent } from "./lib/agent/OpenAIAgent";
+import { runAnthropicAIAgent } from "./lib/agent/anthropicAgent";
 import {
   analysisAndStrategySpecialistSystemPrompt,
   defiAssistantSystemPrompt,
@@ -160,6 +161,32 @@ app.post("/runCryptOpenAIAgent", async (c) => {
   const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
   // runOpenAIAIAgent メソッドを呼び出す。
   const response = await runOpenAIAIAgent(tools, systemPrompt, prompt);
+
+  return c.json({
+    result: response,
+  });
+});
+
+/**
+ * call AnthropicAIAgent function
+ */
+app.post("/runAnthropicAIAgent", async (c) => {
+  // get prompt from request body
+  const { prompt, operation } = await c.req.json();
+
+  if (!prompt) {
+    return c.json(
+      {
+        error: "Prompt is required",
+      },
+      400,
+    );
+  }
+
+  // The system prompt and tools will change based on the operation flag of the argument.
+  const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
+  // runOpenAIAIAgent メソッドを呼び出す。
+  const response = await runAnthropicAIAgent(tools, systemPrompt, prompt);
 
   return c.json({
     result: response,

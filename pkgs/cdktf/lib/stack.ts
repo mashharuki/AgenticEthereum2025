@@ -20,6 +20,7 @@ const {
   ALCHEMY_API_KEY,
   Groq_API_Key,
   COINGECKO_API_KEY,
+  ANTHROPIC_KEY_API,
 } = process.env;
 
 export interface MyStackConfig {
@@ -131,6 +132,10 @@ export class MyStack extends TerraformStack {
                 {
                   name: "COINGECKO_API_KEY",
                   value: COINGECKO_API_KEY,
+                },
+                {
+                  name: "ANTHROPIC_KEY_API",
+                  value: ANTHROPIC_KEY_API,
                 },
               ],
             },

@@ -88,7 +88,20 @@ export default function Home() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: userMessage.content,
+          prompt: `
+            The following content is input from the user.
+            Based on this input, research the latest trends related to Web3, blockchain, and cryptocurrencies, and provide the results.
+
+            #User Input:
+              ${userMessage.content}
+
+            Additionally, ensure the output is concise and formatted as shown below to be passed as input to the News and Fundamental Information Specialist AI Agent.
+
+            #Output:
+              Trend1: {}
+              Trend2: {}
+              Trend3: {}
+          `,
           operation: "SocialTrend",
         }),
       });
@@ -98,31 +111,57 @@ export default function Home() {
       setMessages((prev) => [...prev, aiAMessage]);
 
       // ② Call Vertex AI Agent endpoint to NewsAndFundamentals analysis.
-      const responseB = await fetch(`${CLOUDRUN_API_ENDPOINT}/agentVertexAI`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: textA.result,
-          operation: "NewsAndFundamentals",
-        }),
-      });
+      const responseB = await fetch(
+        `${CLOUDRUN_API_ENDPOINT}/runAnthropicAIAgent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: `
+            The following content is output from the Social Trend Collection Specialist Agent.
+            Based on this input, research the latest news related to Web3, blockchain, and cryptocurrencies, summarize it concisely, and present only the key points.
+
+            #Input from the Social Trend Collection Specialist Agent:
+              ${textA.result}
+
+            Additionally, ensure the output is concise and formatted as shown below to be passed as input to the Risk Management AI Agent.
+
+            #Output:
+              News1: {}
+              News2: {}
+              News3: {}
+          `,
+            operation: "NewsAndFundamentals",
+          }),
+        },
+      );
       const textB = await responseB.json();
       console.log("textB", textB);
       const aiBMessage = { role: "assistant", content: textB.result };
       setMessages((prev) => [...prev, aiBMessage]);
 
       // ③ Call Vertex AI Agent endpoint to NewsAndFundamentals analysis.
-      const responseC = await fetch(
-        `${CLOUDRUN_API_ENDPOINT}/runCryptOpenAIAgent`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            prompt: textB.result,
-            operation: "RiskManagement",
-          }),
-        },
-      );
+      const responseC = await fetch(`${CLOUDRUN_API_ENDPOINT}/agentVertexAI`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: `
+            The following content is input from the News and Fundamentals Agent.
+            Based on this input and the balance status of your wallet, summarize the potential risks concisely.
+
+            #Input from the News And Fundamentals Agent:
+            ${textB.result}
+
+            Additionally, ensure the output is concise and formatted as shown below to be passed as input to the Performance Monitoring AI Agent.
+
+            #Output:
+             riskFactor: {Description of the risk}
+             suggestedMitigation: {Suggested risk mitigation measures}
+             adjustment: {Proposed adjustment to the strategy}
+          `,
+          operation: "RiskManagement",
+        }),
+      });
       const textC = await responseC.json();
       console.log("textC", textC);
       const aiCMessage = { role: "assistant", content: textC.result };
@@ -156,7 +195,7 @@ export default function Home() {
 
       // ⑤ call Groq Agent endpoint to PerformanceMonitoring
       const responseE = await fetch(
-        `${CLOUDRUN_API_ENDPOINT}/runChatGroqAgent`,
+        `${CLOUDRUN_API_ENDPOINT}/runAnthropicAIAgent`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -179,7 +218,7 @@ export default function Home() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             prompt: textE.result,
-            operation: "PerformanceMonitoring",
+            operation: "AnalysisAndReasoning",
           }),
         },
       );
