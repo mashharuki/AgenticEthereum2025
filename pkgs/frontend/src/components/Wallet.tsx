@@ -48,8 +48,8 @@ export function WalletComponent({
           <WalletDropdownFundLink className="hover:bg-blue-200" />
           <WalletDropdownDisconnect className="hover:bg-blue-200" />
           <label className="flex items-center justify-between cursor-pointer px-4 py-4 hover:bg-blue-200">
-            <span className="text-sm text-gray-700 flex items-center">
-              <span className="mr-1">🌙</span> Dark Mode
+            <span className="text-sm flex items-center">
+              <span className="mr-2">🌙</span> Dark Mode
             </span>
             <span className="relative">
               <input
