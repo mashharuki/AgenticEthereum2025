@@ -20,7 +20,7 @@ export function WalletComponent() {
   return (
     <div className="flex justify-end">
       <Wallet>
-        <ConnectWallet className="bg-blue-600">
+        <ConnectWallet className="bg-blue-600 py-2 px-4 rounded-md hover:bg-blue-700">
           <ConnectWalletText className="text-white">Log In</ConnectWalletText>
           <Avatar className="h-6 w-6" />
           <Name className="text-white" />

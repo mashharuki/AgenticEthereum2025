@@ -269,7 +269,7 @@ export default function Home() {
             </ChatMessageList>
           </div>
 
-          <div className="w-full px-4 pb-4">
+          <div className="w-full px-4 pt-3 pb-4">
             <form
               ref={formRef}
               onSubmit={onSubmit}
@@ -295,7 +295,7 @@ export default function Home() {
                   disabled={!input || isGenerating}
                   type="submit"
                   size="sm"
-                  className="ml-auto gap-1.5"
+                  className="ml-auto gap-1.5 bg-blue-600 hover:bg-blue-700"
                 >
                   Send Message
                   <CornerDownLeft className="size-3.5" />

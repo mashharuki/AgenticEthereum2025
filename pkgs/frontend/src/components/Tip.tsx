@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import {
   Transaction,
   TransactionButton,
@@ -25,13 +26,12 @@ export function TipButton() {
 
   return (
     <>
-      <button
-        type="button"
+      <Button
         onClick={() => setIsModalOpen(true)}
-        className="bg-blue-600 text-white text-lg py-2.5 px-4 rounded-md hover:bg-blue-700"
+        className="bg-blue-600 text-white text-lg py-5 px-4 rounded-md hover:bg-blue-700"
       >
-        Reward AI🤖
-      </button>
+        Reward AI 🤖
+      </Button>
       {isModalOpen && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <TipContent onComplete={() => setIsModalOpen(false)} />
@@ -39,102 +39,102 @@ export function TipButton() {
       )}
     </>
   );
-}
 
-function TipContent({ onComplete }: { onComplete: () => void }) {
-  const [amount, setAmount] = useState<string>("0.01");
-  const [recipientAddress] = useState<string>(
-    process.env.NEXT_PUBLIC_TIP_RECIPIENT_ADDRESS || "",
-  );
-  const { address } = useAccount();
+  function TipContent({ onComplete }: { onComplete: () => void }) {
+    const [amount, setAmount] = useState<string>("0.01");
+    const [recipientAddress] = useState<string>(
+      process.env.NEXT_PUBLIC_TIP_RECIPIENT_ADDRESS || "",
+    );
+    const { address } = useAccount();
 
-  const maskedRecipientAddress = (): string => {
-    if (!recipientAddress) return "";
-    const start = recipientAddress.slice(0, 4);
-    const end = recipientAddress.slice(-4);
-    return `${start}...${end}`;
-  };
+    const maskedRecipientAddress = (): string => {
+      if (!recipientAddress) return "";
+      const start = recipientAddress.slice(0, 4);
+      const end = recipientAddress.slice(-4);
+      return `${start}...${end}`;
+    };
 
-  const handleStatus = useCallback(
-    (status: LifecycleStatus) => {
-      console.log("Transaction status:", status);
-      if (status.statusName === "success") {
-        setAmount("");
-        onComplete();
+    const handleStatus = useCallback(
+      (status: LifecycleStatus) => {
+        console.log("Transaction status:", status);
+        if (status.statusName === "success") {
+          setAmount("");
+          onComplete();
+        }
+      },
+      [onComplete],
+    );
+
+    const generateTransaction = useCallback(async () => {
+      if (!amount || !recipientAddress) {
+        throw new Error("送金額と送金先アドレスを入力してください");
       }
-    },
-    [onComplete],
-  );
 
-  const generateTransaction = useCallback(async () => {
-    if (!amount || !recipientAddress) {
-      throw new Error("送金額と送金先アドレスを入力してください");
+      return [
+        {
+          to: recipientAddress as `0x${string}`,
+          value: parseEther(amount),
+          data: "0x" as const,
+        },
+      ];
+    }, [amount, recipientAddress]);
+
+    if (!address) {
+      return null;
     }
 
-    return [
-      {
-        to: recipientAddress as `0x${string}`,
-        value: parseEther(amount),
-        data: "0x" as const,
-      },
-    ];
-  }, [amount, recipientAddress]);
+    return (
+      <div className="p-6">
+        <div className="space-y-4">
+          <div>
+            <label
+              className="block text-sm font-medium text-gray-700 mb-2"
+              htmlFor="recipient"
+            >
+              AI Agent Recipient Address
+            </label>
+            <input
+              name="recipient"
+              type="text"
+              value={maskedRecipientAddress()}
+              readOnly
+              className="w-full px-3 py-2"
+            />
+          </div>
 
-  if (!address) {
-    return null;
-  }
+          <div>
+            <label
+              className="block text-sm font-medium text-gray-700 mb-2"
+              htmlFor="amount"
+            >
+              Tip Amount (ETH)
+            </label>
+            <input
+              name="amount"
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0.01"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              step="0.000000000000000001"
+              min="0"
+            />
+          </div>
 
-  return (
-    <div className="p-6">
-      <div className="space-y-4">
-        <div>
-          <label
-            className="block text-sm font-medium text-gray-700 mb-2"
-            htmlFor="recipient"
+          <Transaction
+            chainId={baseSepolia.id}
+            calls={generateTransaction}
+            onStatus={handleStatus}
           >
-            AI Agent Recipient Address
-          </label>
-          <input
-            name="recipient"
-            type="text"
-            value={maskedRecipientAddress()}
-            readOnly
-            className="w-full px-3 py-2"
-          />
+            <TransactionButton text="Send" className="bg-blue-600" />
+            <TransactionSponsor />
+            <TransactionStatus>
+              <TransactionStatusLabel />
+              <TransactionStatusAction />
+            </TransactionStatus>
+          </Transaction>
         </div>
-
-        <div>
-          <label
-            className="block text-sm font-medium text-gray-700 mb-2"
-            htmlFor="amount"
-          >
-            Tip Amount (ETH)
-          </label>
-          <input
-            name="amount"
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="0.01"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            step="0.000000000000000001"
-            min="0"
-          />
-        </div>
-
-        <Transaction
-          chainId={baseSepolia.id}
-          calls={generateTransaction}
-          onStatus={handleStatus}
-        >
-          <TransactionButton text="Send" className="bg-blue-600" />
-          <TransactionSponsor />
-          <TransactionStatus>
-            <TransactionStatusLabel />
-            <TransactionStatusAction />
-          </TransactionStatus>
-        </Transaction>
       </div>
-    </div>
-  );
+    );
+  }
 }
