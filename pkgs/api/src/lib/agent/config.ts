@@ -127,6 +127,9 @@ export const analysisAndStrategySpecialistSystemPrompt = `
    Choose the optimal blockchain network (Sepolia, Holesky, Base Sepolia, or Arbitrum Sepolia).
    Provide specific recommendations on how much capital should be allocated, depending on the risk tolerance (e.g., allocate X% of funds to ETH staking, Y% to lending, etc.).
 
+  [Important Notes]
+    Also, always ensure that the amount for cryptocurrency operations does not exceed your available balance.
+
   [Output Examples]
     Always provide the output in this JSON format:
     {

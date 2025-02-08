@@ -141,11 +141,13 @@ export default function Home() {
       setMessages((prev) => [...prev, aiBMessage]);
 
       // ③ Call Vertex AI Agent endpoint to NewsAndFundamentals analysis.
-      const responseC = await fetch(`${CLOUDRUN_API_ENDPOINT}/agentVertexAI`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: `
+      const responseC = await fetch(
+        `${CLOUDRUN_API_ENDPOINT}/runCryptOpenAIAgent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: `
             The following content is input from the News and Fundamentals Agent.
             Based on this input and the balance status of your wallet, summarize the potential risks concisely.
 
@@ -159,9 +161,10 @@ export default function Home() {
              suggestedMitigation: {Suggested risk mitigation measures}
              adjustment: {Proposed adjustment to the strategy}
           `,
-          operation: "RiskManagement",
-        }),
-      });
+            operation: "RiskManagement",
+          }),
+        },
+      );
       const textC = await responseC.json();
       console.log("textC", textC);
       const aiCMessage = { role: "assistant", content: textC.result };
@@ -193,31 +196,38 @@ export default function Home() {
       const newMessage = textC.result.concat(textD.result[1]);
       console.log("newMessage", newMessage);
 
-      // ⑤ call Groq Agent endpoint to PerformanceMonitoring
-      const responseE = await fetch(
+      // ⑤ call Anthropic Agent endpoint to AnalysisAndReasoning
+      const responseF = await fetch(
         `${CLOUDRUN_API_ENDPOINT}/runAnthropicAIAgent`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            prompt: newMessage,
-            operation: "PerformanceMonitoring",
-          }),
-        },
-      );
-      const textE = await responseE.json();
-      console.log("textE", textE);
-      const aiEMessage = { role: "assistant", content: textE.result };
-      setMessages((prev) => [...prev, aiEMessage]);
+            prompt: `
+              The following content is the analysis results from the News and Fundamentals Agent and the Risk Management Agent.
+              Based on this information, decide on only one optimal DeFi operation.
 
-      // ⑤ call OpenAI Agent endpoint to AnalysisAndReasoning
-      const responseF = await fetch(
-        `${CLOUDRUN_API_ENDPOINT}/runCryptOpenAIAgent`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            prompt: textE.result,
+              Input from News and Fundamentals Agent
+              ${textB.result}
+
+              Input from Risk Management Agent
+              ${newMessage}
+
+              Additionally, present the output in the following concise format:
+
+              The blockchain name must be specified from one of the following: base sepolia.
+
+              Only one operation should be specified.
+
+              ※Important※
+              Also, always ensure that the amount for cryptocurrency operations does not exceed your available balance.
+
+              Output:
+              blockchain: {blockchain Name}
+              operation: {Operation Name}
+              tokenName: {Token Name}
+              amount: {Amount}
+            `,
             operation: "AnalysisAndReasoning",
           }),
         },
@@ -244,7 +254,19 @@ export default function Home() {
               Authorization: "Basic Y2RwYWdlbnQ6elhyZVVoV2xxUw==",
             },
             body: JSON.stringify({
-              prompt: textF.result,
+              prompt: `
+                The following content is the analysis result from the Analysis and Reasoning Agent. Based on this information, accurately execute the optimal DeFi operation.
+
+                #Input from Analysis and Reasoning Agent
+                  ${textF.result}
+
+                Additionally, present the output in the following concise format:
+
+                #Output:
+                  Blockchain: {Blockchain Name}
+                  Transaction Result: {Execution Result}
+                  Transaction Hash: {Transaction Hash}
+              `,
             }),
           },
         );
@@ -255,6 +277,35 @@ export default function Home() {
         console.log("textG", textG);
         const aiGMessage = { role: "assistant", content: textG.result[1] };
         setMessages((prev) => [...prev, aiGMessage]);
+
+        // ⑤ call Groq Agent endpoint to PerformanceMonitoring
+        const responseE = await fetch(
+          `${CLOUDRUN_API_ENDPOINT}/runCryptOpenAIAgent`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt: `
+                The following content is input from the Execution and Operation Agent.
+                Please provide a concise analysis based on the transaction results.
+
+                #Input from the Execution and Operation Agent
+                 ${newMessage}
+
+                Additionally, please present the output in the following concise format:
+
+                #Output:
+                 KPI: {Profit margin, fees, lending rates, etc.}
+                 suggestedImprovement: {Suggested improvements to the strategy}
+              `,
+              operation: "PerformanceMonitoring",
+            }),
+          },
+        );
+        const textE = await responseE.json();
+        console.log("textE", textE);
+        const aiEMessage = { role: "assistant", content: textE.result };
+        setMessages((prev) => [...prev, aiEMessage]);
       } else {
         // Call ChatGPT AI Agent endpoint to execute defi transaction
         const responseH = await fetch(
@@ -263,7 +314,19 @@ export default function Home() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              prompt: textF.result,
+              prompt: `
+                The following content is the analysis result from the Analysis and Reasoning Agent. Based on this information, accurately execute the optimal DeFi operation.
+
+                #Input from Analysis and Reasoning Agent
+                  ${textF.result}
+
+                Additionally, present the output in the following concise format:
+
+                #Output:
+                  Blockchain: {Blockchain Name}
+                  Transaction Result: {Execution Result}
+                  Transaction Hash: {Transaction Hash}
+              `,
             }),
           },
         );
@@ -271,6 +334,35 @@ export default function Home() {
         console.log("textH", textH);
         const aiHMessage = { role: "assistant", content: textH.result };
         setMessages((prev) => [...prev, aiHMessage]);
+
+        // ⑤ call Groq Agent endpoint to PerformanceMonitoring
+        const responseE = await fetch(
+          `${CLOUDRUN_API_ENDPOINT}/runCryptOpenAIAgent`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt: `
+                The following content is input from the Execution and Operation Agent.
+                Please provide a concise analysis based on the transaction results.
+
+                #Input from the Execution and Operation Agent
+                 ${newMessage}
+
+                Additionally, please present the output in the following concise format:
+
+                #Output:
+                 KPI: {Profit margin, fees, lending rates, etc.}
+                 suggestedImprovement: {Suggested improvements to the strategy}
+              `,
+              operation: "PerformanceMonitoring",
+            }),
+          },
+        );
+        const textE = await responseE.json();
+        console.log("textE", textE);
+        const aiEMessage = { role: "assistant", content: textE.result };
+        setMessages((prev) => [...prev, aiEMessage]);
       }
     } catch (error) {
       console.error("Error during conversation chain:", error);
