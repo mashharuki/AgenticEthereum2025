@@ -20,6 +20,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { TipButton } from "../components/Tip";
 
 const ChatAiIcons = [
   {
@@ -236,6 +237,7 @@ export default function Home() {
             </Button>
           </div>
         </form>
+        <TipButton />
       </div>
     </main>
   );
