@@ -5,7 +5,6 @@
 POST {{baseUrl}}/runCdpChatMode
 Content-Type: application/json
 Authorization: Basic Y2RwYWdlbnQ6elhyZVVoV2xxUw==
-## Authorization: Basic d2ViMy1kZXY6VHJJa051WEJQSg==
 
 {
   "prompt": "If the Available Borrow Amount of the account is 0.01 USDC or more, please borrow USDC using it as collateral. Include the following in the results: - The account's updated collateral status - Transaction hash   - Transaction status"
