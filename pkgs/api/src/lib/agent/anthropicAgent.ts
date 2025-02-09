@@ -11,7 +11,7 @@ dotenv.config();
 const { ANTHROPIC_KEY_API } = process.env;
 
 /**
- * AnthropicのLLMを使ってAI Agent用のインスタンスを作成するメソッド
+ * Method for creating an instance for an AI Agent using Anthropic's LLM
  */
 export const createAnthropicAIAgent = (
   agentTools: ToolNode,
@@ -26,7 +26,7 @@ export const createAnthropicAIAgent = (
       apiKey: ANTHROPIC_KEY_API,
     });
 
-  // AI Agent用のインスタンスを生成
+  // Generate an instance for AI Agent
   const agent = createReactAgent({
     llm: agentModel,
     tools: agentTools,
@@ -38,17 +38,17 @@ export const createAnthropicAIAgent = (
 };
 
 /**
- * Anthropic Agentを使ったAIのメソッドを呼び出す。
+ * Call the AI method using Anthropic Agent
  */
 export const runAnthropicAIAgent = async (
   tools: ToolNode,
   systemPrompt: string,
   prompt: string,
 ) => {
-  // AI agent用のインスタンスを作成する。
+  // Create an instance for the AI agent
   const agent = createAnthropicAIAgent(tools, systemPrompt);
 
-  // AI の推論を実行してみる。
+  // Let's try running an AI inference
   const agentNextState = await agent.invoke(
     { messages: [new HumanMessage(prompt)] },
     { configurable: { thread_id: "44" } },

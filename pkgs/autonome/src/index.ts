@@ -6,9 +6,9 @@ import { cdpAssistantSystemPrompt } from "./lib/config";
 
 const app = new Hono();
 
-// CORSの設定
+// CORS Setting
 app.use(
-  "*", // 全てのエンドポイントに適用
+  "*", // Applies to all endpoints.
   cors({
     origin: "*",
     allowMethods: ["GET", "POST", "PUT", "DELETE"],
@@ -17,14 +17,14 @@ app.use(
 );
 
 /**
- * デフォルトのメソッド
+ * default method
  */
 app.get("/", (c) => {
   return c.text("Hello, World!");
 });
 
 /**
- * ヘルスチェックメソッド
+ * health check method
  */
 app.get("/health", (c) => {
   return c.json({
@@ -34,13 +34,13 @@ app.get("/health", (c) => {
 });
 
 /**
- * CDP AgentKitを使ったAIのメソッドを呼び出すメソッド
+ * CDP AgentKit Chat Mode method
  */
 app.post("/runCdpChatMode", async (c) => {
-  // リクエストボディからプロンプトを取得
+  // Get a prompt from a request body.
   const { prompt } = await c.req.json();
 
-  // プロンプトが存在しない場合にエラーハンドリング
+  // Error handling when no prompt exists
   if (!prompt) {
     return c.json(
       {

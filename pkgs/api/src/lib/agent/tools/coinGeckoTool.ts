@@ -6,12 +6,12 @@ dotenv.config();
 
 const { COINGECKO_API_KEY } = process.env;
 
-// CoinGecko APIクライアント
+// CoinGecko API Base URL
 const COINGECKO_BASE_URL = "https://api.coingecko.com/api/v3";
 
 /**
- * トレンドトークンを取得するツール
- * CoinGecko APIから24時間のトレンド暗号通貨を取得します。
+ * Tool for obtaining trend tokens
+ * Retrieves 24-hour trending cryptocurrencies from the CoinGecko API.
  */
 const getTrendingTokens = tool(
   async () => {
@@ -27,7 +27,7 @@ const getTrendingTokens = tool(
 
       const rawData = response.data;
 
-      // データクリーニング関数
+      // Data cleaning function
       //@ts-ignore
       const cleanNestedData = (data) => {
         const fieldsToExclude = [
@@ -56,7 +56,7 @@ const getTrendingTokens = tool(
         return data;
       };
 
-      // トレンドデータ整形
+      // Trend data formatting
       const limitedData = { ...rawData };
 
       if (Array.isArray(limitedData.coins)) {

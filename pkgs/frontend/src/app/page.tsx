@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   ChatBubble,
@@ -401,7 +400,7 @@ export default function Home() {
     if (action === "Refresh") {
       setIsGenerating(true);
       // try {
-      //   // 必要に応じてリロード処理を追加
+      //   // Reloading process added as required
       //   await reload();
 
       // } catch (error) {
@@ -468,7 +467,7 @@ export default function Home() {
                               className="whitespace-pre-wrap pt-2"
                               key={part}
                             >
-                              {/* コードブロック表示用のコンポーネントを挿入 */}
+                              {/* Insert the code block display component */}
                             </pre>
                           );
                         })}

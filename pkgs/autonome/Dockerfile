@@ -1,22 +1,22 @@
-# ベースイメージ
+# Base image
 FROM node:18-alpine
 
-# プロジェクトルートを変更する（任意）
+# Change project route (optional)
 WORKDIR /usr/src/app
 
-# pnpmをグローバルインストール
+# Install pnpm globally
 RUN npm install -g pnpm
 
-# フォルダの中身を全てコピーする
+# Copy all the contents of a folder
 COPY ./ ./
 
-# コピーしたファイルに node ユーザーの権限を付与
+# Grant node user permissions to the copied file
 RUN chown -R node:node /usr/src/app
 
-# 依存関係をインストール
+# Install dependencies
 RUN pnpm install --prod
 
-## clone Coinbase AgentKit repository
+## Clone Coinbase AgentKit repository
 RUN apk add --no-cache git
 RUN git clone https://github.com/coinbase/agentkit.git
 
@@ -29,9 +29,9 @@ RUN cd ../
 RUN rm -rf node_modules/@coinbase/agentkit/dist/*
 RUN cp -r agentkit/typescript/agentkit/dist/* node_modules/@coinbase/agentkit/dist/
 
-# アプリを実行するユーザーを指定
+# Specify the user who will run the application
 USER node
 EXPOSE 3000/tcp
 
-# サーバーを起動する
+# Start the server
 CMD ["pnpm", "run", "dev", "&"]

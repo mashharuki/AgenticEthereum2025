@@ -11,7 +11,7 @@ import { ERC20_ABI } from "../abis/erc20_abi";
 // AAVE Lending Pool contract address (Base Sepolia)
 const AAVE_LENDING_POOL_ADDRESS = "0x07eA79F68B2B3df564D0A34F8e19D9B1e339814b";
 
-// public Clientを作成
+// Create a public Client
 const client = createPublicClient({
   chain: baseSepolia,
   transport: http("https://sepolia.base.org"),
@@ -72,7 +72,7 @@ const GetTokenBalanceInput = z
   .describe("Get the token balance for the given token address.");
 
 // ==========================================================================================
-// 各種ツールの作成
+// Create various tools
 //　==========================================================================================
 
 /**
@@ -167,7 +167,7 @@ export const createLendCryptoToolForCdp =
         const walletAddress = await walletProvider.getAddress();
         console.log("wallet address:", walletAddress);
 
-        // トランザクションデータ
+        // Transaction object
         const tx = {
           from: walletAddress as `0x${string}`,
           to: assetAddress as `0x${string}`,

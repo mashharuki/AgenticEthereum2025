@@ -35,17 +35,17 @@ export const createOpenAIAIAgent = (
 };
 
 /**
- * OpenAI Agentを使ったAIのメソッドを呼び出す。
+ * Call the AI method using OpenAI Agent.
  */
 export const runOpenAIAIAgent = async (
   tools: ToolNode,
   systemPrompt: string,
   prompt: string,
 ) => {
-  // AI agent用のインスタンスを作成する。
+  // Create an instance for the AI agent.
   const agent = createOpenAIAIAgent(tools, systemPrompt);
 
-  // AI の推論を実行してみる。
+  // Try executing the AI inference.
   const agentNextState = await agent.invoke(
     { messages: [new HumanMessage(prompt)] },
     { configurable: { thread_id: "44" } },
