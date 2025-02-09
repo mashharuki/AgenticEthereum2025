@@ -88,11 +88,22 @@ To solve this issue, we propose a new approach: "Interactive Discussions Between
 
   - **User Participation:**
 
-    Users can join the discussion via chat, and influence the AI agents' discussions and behavior through tipping.
+    Users can join the discussion via chat, and influence the AI agents' discussions and behavior(send Transaction) through tipping.
 
   - **Live Experience:**
 
     Incorporating elements from platforms like NicoNico, users can enjoy discussions and efficiently gather information in a real-time streaming environment.
+
+  - **The AI Agents take action on a DeFi protocol as a result of their discussions.:**
+
+    After the live discussion, the AI Agents perform operations on a DeFi protocol to efficiently grow assets. These operations are selected from functions defined by an external tool developed for this hackathon.
+
+    The external tool implements the following features:
+
+    - **Token swaps on Uniswap**
+    - **Lending on the AAVE Protocol**
+    - **Staking using Lido**
+    - **Restaking using EigenLayer**
 
 - **Value Offered:**
 
@@ -111,6 +122,24 @@ To solve this issue, we propose a new approach: "Interactive Discussions Between
   - **Beginner-Friendly:**
 
     By including an agent focused on beginner-level crypto asset topics in live discussions, simple questions and exchanges can be automatically handled.
+
+## Point
+
+### System Prompts
+
+To enable AI Agents to conduct live discussions, I put significant effort into designing their system prompts. I carefully crafted them to be as detailed as possible, clearly defining tasks and specifying the format for their outputs.
+
+[System Prompts](https://github.com/mashharuki/AgenticEthereum2025/blob/main/pkgs/api/src/lib/agent/config.ts)
+
+### Prompt Chaining
+
+I also put considerable effort into prompt chaining.
+
+Initially, I couldn't get the AI Agents to execute transactions. To overcome this, I not only fine-tuned the system prompts but also provided detailed instructions and specified output formats in the prompts when calling each AI Agent.
+
+As a result, I successfully stabilized the process, enabling the Agents to send transactions after discussions.
+
+[Prompt Chaining](https://github.com/mashharuki/AgenticEthereum2025/blob/main/pkgs/frontend/src/app/page.tsx#L89-L370)
 
 ## The applied  prizes
 
@@ -196,9 +225,17 @@ For detailed information on the implementation of the external tools, please ref
 
   [pkgs/api/src/lib/agent/tools/holesky/lidoTool.ts](https://github.com/mashharuki/AgenticEthereum2025/blob/main/pkgs/api/src/lib/agent/tools/holesky/lidoTool.ts)
 
+  Staking Transaction data
+
+  [0xa9b8eae51964674dca614556b2d6214b22ce71a99931cdd05b68cb8672506d11](https://holesky.etherscan.io/tx/0xa9b8eae51964674dca614556b2d6214b22ce71a99931cdd05b68cb8672506d11)
+
 - EigenLayerTool
 
   [pkgs/api/src/lib/agent/tools/holesky/eigenlayerTool.ts](https://github.com/mashharuki/AgenticEthereum2025/blob/main/pkgs/api/src/lib/agent/tools/holesky/eigenlayerTool.ts)
+
+  ReStaking Transaction data
+
+  [0xf0f42f4a8cd3c219fd855d55a816993bf15328bbca4dffc722cb7eb5b7fa15bb](https://holesky.etherscan.io/tx/0xf0f42f4a8cd3c219fd855d55a816993bf15328bbca4dffc722cb7eb5b7fa15bb)
 
 ### Privy - $5000
 
