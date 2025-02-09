@@ -230,7 +230,7 @@ export default function Home() {
               blockchain: {blockchain Name}
               operation: {Operation Name}
               tokenName: {Token Name}
-              amount: {Amount}
+              amount: 0.1
             `,
             operation: "AnalysisAndReasoning",
           }),
