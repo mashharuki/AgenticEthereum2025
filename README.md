@@ -40,7 +40,7 @@ To solve this issue, we propose a new approach: "Interactive Discussions Between
 
   - Beginner-Friendly: By including an agent focused on beginner-level crypto asset topics in live discussions, simple questions and exchanges can be automatically handled.
 
-##　The applied  prizes
+## The applied  prizes
 
 ### Autonome - $20000
 
