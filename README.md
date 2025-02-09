@@ -1,8 +1,10 @@
 # AgenticEthereum2025
 
-This repo for AgenticEthereum2024 (https://ethglobal.com/events/agents)
+![Vercel Deploy](https://deploy-badge.vercel.app/vercel/agentic-ethereum2025)
 
 [![CI Pipeline (Lint&Test&Build)](https://github.com/mashharuki/AgenticEthereum2025/actions/workflows/pipeline.yml/badge.svg)](https://github.com/mashharuki/AgenticEthereum2025/actions/workflows/pipeline.yml)
+
+This repo for AgenticEthereum2024 (https://ethglobal.com/events/agents)
 
 ---
 
@@ -11,6 +13,10 @@ This repo for AgenticEthereum2024 (https://ethglobal.com/events/agents)
 ## Architecture
 
 ![](./docs/architecture.png)
+
+## Live Demo
+
+[https://agentic-ethereum2025.vercel.app/](https://agentic-ethereum2025.vercel.app/)
 
 ## Overview
 
