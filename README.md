@@ -142,7 +142,7 @@ We have also uploaded a custom framework for this project.
 
 To meet the submission requirements, we have uploaded a detailed demo video to YouTube.
 
-[Youtube - Demo Video for Autonome]()
+[Youtube - Demo Video for Autonome](https://youtu.be/n1w5I5vyAo8)
 
 The source code is stored under the `pkgs/autonome` directory.
 
