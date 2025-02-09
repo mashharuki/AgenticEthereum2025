@@ -10,7 +10,6 @@
     "api": "pnpm -F \"api\"",
     "autonome": "pnpm -F \"autonome\"",
     "cdktf": "pnpm -F \"cdktf\"",
-    "contract": "pnpm -F \"contract\"",
     "frontend": "pnpm -F \"frontend\""
   },
   "keywords": [],
