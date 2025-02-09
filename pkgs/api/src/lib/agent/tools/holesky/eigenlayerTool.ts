@@ -4,7 +4,7 @@ import "dotenv/config";
 import { http, createPublicClient, createWalletClient, parseUnits } from "viem";
 import { holesky } from "viem/chains";
 import { z } from "zod";
-import { createPrivyViemAccount } from "../../privy";
+import { createPrivyViemAccount } from "../../../wallet/privy";
 import { ERC20_ABI } from "../abis/erc20_abi";
 
 dotenv.config();

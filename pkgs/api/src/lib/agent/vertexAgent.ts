@@ -36,7 +36,7 @@ export const createVertexAIAIAgent = (systemPrompt: string) => {
 
   // Instantiate Gemini models
   const agent = vertexAI.getGenerativeModel({
-    model: "gemini-pro",
+    model: "gemini-1.5-flash",
     safetySettings: [
       {
         category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
@@ -140,27 +140,9 @@ export const runVertexAIAIAgent = async (
   // ワークフローを構築する。
   const app = await createAgentTask(agent, tools);
 
-  // プロンプトを調整
-  const fixedPrompt = `
-    You are a beginner in the world of DeFi, trying to understand complex concepts and terms related to decentralized finance.
-
-    The following text contains technical details from a professional DeFi investor who has analyzed the market and provided insights. Your job is to read this analysis and identify any terms or concepts you don't fully understand. When you encounter something unclear, ask a simple, straightforward question to better understand the topic. Keep the tone inquisitive and beginner-friendly.
-
-    Here is the analysis from the professional investor:
-
-      "${prompt}"
-
-    And please output the response in below style.
-
-    # output
-     Questions:
-      ・
-      ・
-  `;
-
   // 推論実行
   const finalState = await app.invoke({
-    messages: [new HumanMessage(fixedPrompt)],
+    messages: [new HumanMessage(prompt)],
   });
 
   const response = finalState.messages[finalState.messages.length - 1].content;

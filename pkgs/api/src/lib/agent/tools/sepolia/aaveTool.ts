@@ -1,9 +1,12 @@
 import { tool } from "@langchain/core/tools";
 import * as dotenv from "dotenv";
 import { http, createPublicClient, createWalletClient, parseUnits } from "viem";
-import { arbitrumSepolia } from "viem/chains";
+import { sepolia } from "viem/chains";
 import { z } from "zod";
-import { createPrivyViemAccount, createPrivyWallet } from "../../privy";
+import {
+  createPrivyViemAccount,
+  createPrivyWallet,
+} from "../../../wallet/privy";
 import { AAVE_LENDING_POOL_ABI_TESTNET } from "../abis/aave_lending_pool_abi_testnet";
 import { ERC20_ABI } from "../abis/erc20_abi";
 
@@ -11,27 +14,27 @@ dotenv.config();
 
 const { ALCHEMY_API_KEY } = process.env;
 
-// コントラクトのアドレス(arbitrum Sepolia)
-const AAVE_LENDING_POOL_ADDRESS = "0xBfC91D59fdAA134A4ED45f7B584cAf96D7792Eff";
+// コントラクトのアドレス(sepolia)
+const AAVE_LENDING_POOL_ADDRESS = "0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951";
 
 // public Clientとwallet Clientを作成
 const client = createPublicClient({
-  chain: arbitrumSepolia,
-  transport: http(`https://arb-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`),
+  chain: sepolia,
+  transport: http(`https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`),
 });
 const walletClient = createWalletClient({
-  transport: http(`https://arb-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`),
-  chain: arbitrumSepolia,
+  transport: http(`https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`),
+  chain: sepolia,
 });
 
 /**
- * 暗号通貨を借り入れる ForArbitrumSepolia
+ * 暗号通貨を借り入れる
  * @param amount 借りる暗号通貨の量
  * @param assetAddress 借りる資産のコントラクトアドレス
  * @param interestRateMode 利率モード（1: 固定金利、2: 変動金利）
  * @returns トランザクションハッシュまたは null
  */
-const borrowCryptoForArbitrumSepolia = tool(
+const borrowCrypto = tool(
   async (input: {
     amount: number;
     assetAddress: `0x${string}`;
@@ -82,9 +85,9 @@ const borrowCryptoForArbitrumSepolia = tool(
     }
   },
   {
-    name: "borrow_crypto_on_arbitrum_sepolia",
+    name: "borrow_crypto",
     description:
-      "Borrow a specified amount of a cryptocurrency asset from AAVE Lending Pool on Arbitrum Sepolia.",
+      "Borrow a specified amount of a cryptocurrency asset from AAVE Lending Pool.",
     schema: z.object({
       amount: z
         .number()
@@ -100,12 +103,12 @@ const borrowCryptoForArbitrumSepolia = tool(
 );
 
 /**
- * 暗号通貨を貸し出すメソッド ForArbitrumSepolia
+ * 暗号通貨を貸し出すメソッド
  * @param amount
  * @param assetAddress
  * @returns
  */
-const lendCryptoForArbitrumSepolia = tool(
+const lendCrypto = tool(
   async (input: { amount: number; assetAddress: `0x${string}` }) => {
     try {
       const { amount, assetAddress } = input;
@@ -158,9 +161,9 @@ const lendCryptoForArbitrumSepolia = tool(
     }
   },
   {
-    name: "lend_crypto_on_arbitrum_sepolia",
+    name: "lend_crypto",
     description:
-      "Lend a specified amount of a cryptocurrency asset to the AAVE Lending Pool on Arbitrum Sepolia.",
+      "Lend a specified amount of a cryptocurrency asset to the AAVE Lending Pool.",
     schema: z.object({
       amount: z
         .number()
@@ -176,10 +179,10 @@ const lendCryptoForArbitrumSepolia = tool(
 );
 
 /**
- * ユーザーの資産情報を取得するメソッド ForArbitrumSepolia
+ * ユーザーの資産情報を取得するメソッド
  * @returns
  */
-const getUserAccountDataForArbitrumSepolia = tool(
+const getUserAccountData = tool(
   async (input: { userAddress: `0x${string}` }) => {
     try {
       const { userAddress } = input;
@@ -210,9 +213,9 @@ const getUserAccountDataForArbitrumSepolia = tool(
     }
   },
   {
-    name: "get_user_account_data_on_arbitrum_sepolia",
+    name: "get_user_account_data",
     description:
-      "Retrieve the user's account data from AAVE, including collateral, debt, and health factor on Arbitrum Sepolia.",
+      "Retrieve the user's account data from AAVE, including collateral, debt, and health factor.",
     schema: z.object({
       userAddress: z
         .string()
@@ -224,12 +227,12 @@ const getUserAccountDataForArbitrumSepolia = tool(
 );
 
 /**
- * ユーザーのトークンの残高を取得するメソッド ForArbitrumSepolia
+ * ユーザーのトークンの残高を取得するメソッド
  * @param tokenAddress
  * @param userAddress
  * @returns
  */
-const getTokenBalanceForArbitrumSepolia = tool(
+const getTokenBalance = tool(
   async (input: {
     tokenAddress: `0x${string}`;
     userAddress?: `0x${string}`;
@@ -272,9 +275,9 @@ const getTokenBalanceForArbitrumSepolia = tool(
     }
   },
   {
-    name: "get_token_balance_on_arbitrum_sepolia",
+    name: "get_token_balance",
     description:
-      "Get the token balance of the user for the given token address on Arbitrum Sepolia.",
+      "Get the token balance of the user for the given token address.",
     schema: z.object({
       tokenAddress: z
         .string()
@@ -293,9 +296,4 @@ const getTokenBalanceForArbitrumSepolia = tool(
   },
 );
 
-export {
-  borrowCryptoForArbitrumSepolia,
-  getTokenBalanceForArbitrumSepolia,
-  getUserAccountDataForArbitrumSepolia,
-  lendCryptoForArbitrumSepolia,
-};
+export { borrowCrypto, getTokenBalance, getUserAccountData, lendCrypto };

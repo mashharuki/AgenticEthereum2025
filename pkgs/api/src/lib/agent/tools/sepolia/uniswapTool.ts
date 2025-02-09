@@ -10,11 +10,14 @@ import {
 } from "viem";
 import { sepolia } from "viem/chains";
 import { z } from "zod";
+import {
+  createPrivyViemAccount,
+  createPrivyWallet,
+} from "../../../wallet/privy";
 import { ERC20_ABI } from "../abis/erc20_abi";
 import { FACTORY_ABI } from "../abis/uniswap/factory";
 import { QUOTER_ABI } from "../abis/uniswap/quoter";
 import { SWAP_ROUTER_ABI } from "../abis/uniswap/swaprouter";
-import { account } from "../util";
 
 dotenv.config();
 
@@ -36,7 +39,6 @@ const publicClient = createPublicClient({
 const walletClient = createWalletClient({
   chain: sepolia,
   transport: http(`https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`),
-  account: account,
 });
 
 /**
@@ -44,16 +46,20 @@ const walletClient = createWalletClient({
  */
 async function approveToken(tokenAddress: `0x${string}`, amount: bigint) {
   try {
+    // call approve tx
     const approveTx = await walletClient.writeContract({
+      account: await createPrivyViemAccount(),
       abi: ERC20_ABI,
       address: tokenAddress,
       functionName: "approve",
       args: [SWAP_ROUTER_CONTRACT_ADDRESS, amount],
     });
+
     console.log("-------------------------------");
     console.log("Sending Approval Transaction...");
     console.log(`Transaction Sent: ${approveTx}`);
     console.log("-------------------------------");
+
     const receipt = await publicClient.waitForTransactionReceipt({
       hash: approveTx,
     });
@@ -91,6 +97,9 @@ async function quoteAndLogSwap(
   amountIn: bigint,
   decimals: number,
 ) {
+  // walllet data
+  const walletData = await createPrivyWallet();
+
   const quotedAmountOut = await publicClient.readContract({
     address: QUOTER_CONTRACT_ADDRESS,
     abi: QUOTER_ABI,
@@ -100,7 +109,7 @@ async function quoteAndLogSwap(
         tokenIn: tokenIn,
         tokenOut: tokenOut,
         fee: 3000,
-        recipient: walletClient.account.address,
+        recipient: walletData.address,
         deadline: Math.floor(new Date().getTime() / 1000 + 60 * 10),
         amountIn: amountIn,
         sqrtPriceLimitX96: 0,
@@ -121,8 +130,11 @@ async function executeSwap(
   amountIn: bigint,
   amountOutMinimum: bigint,
 ) {
-  // swapを実行
+  // walllet data
+  const walletData = await createPrivyWallet();
+  // call swap function
   const swapTx = await walletClient.writeContract({
+    account: await createPrivyViemAccount(),
     address: SWAP_ROUTER_CONTRACT_ADDRESS,
     abi: SWAP_ROUTER_ABI,
     functionName: "exactInputSingle",
@@ -131,7 +143,7 @@ async function executeSwap(
         tokenIn: tokenIn,
         tokenOut: tokenOut,
         fee: 3000,
-        recipient: walletClient.account.address,
+        recipient: walletData.address,
         amountIn: amountIn,
         amountOutMinimum: amountOutMinimum,
         sqrtPriceLimitX96: 0,
