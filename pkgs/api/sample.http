@@ -14,7 +14,7 @@ POST {{baseUrl}}/agentVertexAI
 Content-Type: application/json
 
 {
-  "prompt": "Please tell me the latest news about Web3 or cryptocurrency or blockchain. I will lend some token on base sepolia.",
+  "prompt": "Please tell me the latest news about Web3 or cryptocurrency or blockchain. I have to plan to swap some token on sepolia.",
   "operation": "SocialTrend"
 }
 

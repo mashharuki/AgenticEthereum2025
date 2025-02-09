@@ -193,8 +193,8 @@ export default function Home() {
 
       const textD = await responseD.json();
       console.log("textD", textD);
-      const aiDMessage = { role: "assistant", content: textD.result[1] };
-      setMessages((prev) => [...prev, aiDMessage]);
+      // const aiDMessage = { role: "assistant", content: textD.result[1] };
+      // setMessages((prev) => [...prev, aiDMessage]);
 
       // concat the messages
       const newMessage = textC.result.concat(textD.result[1]);
