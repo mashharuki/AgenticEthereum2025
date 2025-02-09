@@ -2,21 +2,19 @@
 
 ## How to work
 
-- インストール
+- Instal
 
   ```bash
   pnpm install
   ```
 
-- ローカルで起動
+- start at local
 
   ```bash
   pnpm run dev
   ```
 
-- Docker コンテナをビルド
-
-  `autonome-cdp-custom`という名前で`latest`をタグ付け
+- Build Docker Contrainer Image
 
   ```bash
   docker build . -t autonome-cdp-custom:latest
@@ -28,7 +26,7 @@
   docker build --platform linux/amd64 -t autonome-cdp-custom:latest .
   ```
 
-- Docker コンテナを起動
+- Run Docker Contrainer
 
   ```bash
   docker run -p 3000:3000 --env-file .env autonome-cdp-custom:latest
@@ -39,19 +37,19 @@
   docker run -p 3000:3000 --env-file .env haruki31067/autonome-cdp-custom:latest
   ```
 
-  イメージ ID は以下で確認
+  get Image ID
 
   ```bash
   docker image ls
   ```
 
-- Docker コンテナを停止
+- Stop Docker Contrainer
 
   ```bash
   docker stop <imageid>
   ```
 
-  以下のコマンドでイメージ削除
+  remove Docker Contrainer Iamge
 
   ```bash
   docker image rm -f <imageid>
