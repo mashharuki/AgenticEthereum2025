@@ -59,6 +59,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const { address } = useAccount();
+  const [darkMode, setDarkMode] = useState(false);
 
   /**
    * handleInputChange
@@ -421,109 +422,125 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   return (
-    <main className="flex h-screen w-full max-w-3xl flex-col items-center mx-auto">
-      <Header />
-      {address && (
-        <>
-          <div className="flex-1 w-full overflow-y-auto py-6" ref={messagesRef}>
-            <ChatMessageList>
-              {messages?.map((message, index) => (
-                <ChatBubble
-                  key={message.content}
-                  variant={message.role === "user" ? "sent" : "received"}
-                >
-                  <ChatBubbleAvatar
-                    src=""
-                    fallback={message.role === "user" ? "👨🏽" : "🤖"}
-                  />
-                  <ChatBubbleMessage>
-                    {message.content
-                      .split("```")
-                      .map((part: string, index: number) => {
-                        if (index % 2 === 0) {
-                          return (
-                            <Markdown key={part} remarkPlugins={[remarkGfm]}>
-                              {part}
-                            </Markdown>
-                          );
-                        }
-                        return (
-                          <pre className="whitespace-pre-wrap pt-2" key={part}>
-                            {/* コードブロック表示用のコンポーネントを挿入 */}
-                          </pre>
-                        );
-                      })}
-
-                    {message.role === "assistant" &&
-                      messages.length - 1 === index && (
-                        <div className="flex items-center mt-1.5 gap-1">
-                          {!isGenerating &&
-                            ChatAiIcons.map((icon) => {
-                              const Icon = icon.icon;
-                              return (
-                                <ChatBubbleAction
-                                  variant="outline"
-                                  className="size-5"
-                                  key={icon.icon.displayName}
-                                  icon={<Icon className="size-3" />}
-                                  onClick={() =>
-                                    handleActionClick(icon.label, index)
-                                  }
-                                />
-                              );
-                            })}
-                        </div>
-                      )}
-                  </ChatBubbleMessage>
-                </ChatBubble>
-              ))}
-
-              {isGenerating && (
-                <ChatBubble variant="received">
-                  <ChatBubbleAvatar src="" fallback="🤖" />
-                  <ChatBubbleMessage isLoading />
-                </ChatBubble>
-              )}
-            </ChatMessageList>
-          </div>
-
-          <div className="w-full px-4 pb-4">
-            <form
-              ref={formRef}
-              onSubmit={onSubmit}
-              className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
+    <div className="bg-white dark:bg-sky-950">
+      <main className="flex h-screen w-full max-w-3xl flex-col items-center mx-auto">
+        <Header darkMode={darkMode} setDarkMode={setDarkMode} />
+        {address && (
+          <>
+            <div
+              className="flex-1 w-full overflow-y-auto py-6"
+              ref={messagesRef}
             >
-              <ChatInput
-                value={input}
-                onKeyDown={onKeyDown}
-                onChange={handleInputChange}
-                placeholder="Type your message here..."
-                className="rounded-lg bg-background border-0 shadow-none focus-visible:ring-0"
-              />
-              <div className="flex items-center p-3 pt-0">
-                <Button variant="ghost" size="icon">
-                  <Paperclip className="size-4" />
-                  <span className="sr-only">Attach file</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <Mic className="size-4" />
-                  <span className="sr-only">Use Microphone</span>
-                </Button>
-                <Button
-                  disabled={!input || isGenerating}
-                  type="submit"
-                  size="sm"
-                  className="ml-auto gap-1.5"
-                >
-                  Send Message
-                  <CornerDownLeft className="size-3.5" />
-                </Button>
-              </div>
-            </form>
-          </div>
-        </>
-      )}
-    </main>
+              <ChatMessageList>
+                {messages?.map((message, index) => (
+                  <ChatBubble
+                    key={message.content}
+                    variant={message.role === "user" ? "sent" : "received"}
+                  >
+                    <ChatBubbleAvatar
+                      src=""
+                      fallback={message.role === "user" ? "👤" : "🤖"}
+                    />
+                    <ChatBubbleMessage>
+                      {message.content
+                        .split("```")
+                        .map((part: string, index: number) => {
+                          if (index % 2 === 0) {
+                            return (
+                              <Markdown key={part} remarkPlugins={[remarkGfm]}>
+                                {part}
+                              </Markdown>
+                            );
+                          }
+                          return (
+                            <pre
+                              className="whitespace-pre-wrap pt-2"
+                              key={part}
+                            >
+                              {/* コードブロック表示用のコンポーネントを挿入 */}
+                            </pre>
+                          );
+                        })}
+
+                      {message.role === "assistant" &&
+                        messages.length - 1 === index && (
+                          <div className="flex items-center mt-1.5 gap-1">
+                            {!isGenerating &&
+                              ChatAiIcons.map((icon) => {
+                                const Icon = icon.icon;
+                                return (
+                                  <ChatBubbleAction
+                                    variant="outline"
+                                    className="size-5"
+                                    key={icon.icon.displayName}
+                                    icon={<Icon className="size-3" />}
+                                    onClick={() =>
+                                      handleActionClick(icon.label, index)
+                                    }
+                                  />
+                                );
+                              })}
+                          </div>
+                        )}
+                    </ChatBubbleMessage>
+                  </ChatBubble>
+                ))}
+
+                {isGenerating && (
+                  <ChatBubble variant="received">
+                    <ChatBubbleAvatar src="" fallback="🤖" />
+                    <ChatBubbleMessage isLoading />
+                  </ChatBubble>
+                )}
+              </ChatMessageList>
+            </div>
+
+            <div className="w-full px-4 pt-3 pb-4">
+              <form
+                ref={formRef}
+                onSubmit={onSubmit}
+                className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
+              >
+                <ChatInput
+                  value={input}
+                  onKeyDown={onKeyDown}
+                  onChange={handleInputChange}
+                  placeholder="Type your message here..."
+                  className="rounded-lg bg-background border-0 shadow-none focus-visible:ring-0"
+                />
+                <div className="flex items-center p-3 pt-0">
+                  <Button variant="ghost" size="icon">
+                    <Paperclip className="size-4" />
+                    <span className="sr-only">Attach file</span>
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Mic className="size-4" />
+                    <span className="sr-only">Use Microphone</span>
+                  </Button>
+                  <Button
+                    disabled={!input || isGenerating}
+                    type="submit"
+                    size="sm"
+                    className="ml-auto gap-1.5 bg-yellow-400 hover:bg-yellow-500 text-black"
+                  >
+                    Send Message
+                    <CornerDownLeft className="size-3.5" />
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </>
+        )}
+      </main>
+    </div>
   );
 }
