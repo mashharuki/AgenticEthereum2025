@@ -219,7 +219,7 @@ export default function Home() {
 
               Additionally, present the output in the following concise format:
 
-              The blockchain name must be specified from one of the following: base sepolia.
+              The blockchain name must be specified from one of the following: sepolia.
 
               Only one operation should be specified.
 
@@ -259,7 +259,8 @@ export default function Home() {
             },
             body: JSON.stringify({
               prompt: `
-                The following content is the analysis result from the Analysis and Reasoning Agent. Based on this information, accurately execute the optimal DeFi operation.
+                The following content is the analysis result from the Analysis and Reasoning Agent.
+                Based on this information, accurately execute the optimal DeFi operation.
 
                 #Input from Analysis and Reasoning Agent
                   ${textF.result}
@@ -319,7 +320,8 @@ export default function Home() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               prompt: `
-                The following content is the analysis result from the Analysis and Reasoning Agent. Based on this information, accurately execute the optimal DeFi operation.
+                The following content is the analysis result from the Analysis and Reasoning Agent.
+                Based on this information, accurately execute the optimal DeFi operation.
 
                 #Input from Analysis and Reasoning Agent
                   ${textF.result}
