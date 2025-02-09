@@ -219,7 +219,7 @@ export default function Home() {
 
               Additionally, present the output in the following concise format:
 
-              The blockchain name must be specified from one of the following: sepolia.
+              The blockchain name must be specified from one of the following: sepolia or arbitrum sepolia or base sepolia or holesky.
 
               Only one operation should be specified.
 
