@@ -42,7 +42,7 @@ const walletClient = createWalletClient({
 });
 
 /**
- * トークンをApproveするメソッド
+ * Method for approving a token
  */
 async function approveToken(tokenAddress: `0x${string}`, amount: bigint) {
   try {
@@ -73,7 +73,7 @@ async function approveToken(tokenAddress: `0x${string}`, amount: bigint) {
 }
 
 /**
- * Pool情報を取得するメソッド
+ * Method for obtaining pool information
  */
 async function getPoolInfo(tokenIn: `0x${string}`, tokenOut: `0x${string}`) {
   const poolAddress = await publicClient.readContract({
@@ -89,7 +89,7 @@ async function getPoolInfo(tokenIn: `0x${string}`, tokenOut: `0x${string}`) {
 }
 
 /**
- * Swapクオートを取得するメソッド
+ * Method for obtaining a swap quote
  */
 async function quoteAndLogSwap(
   tokenIn: `0x${string}`,
@@ -122,7 +122,7 @@ async function quoteAndLogSwap(
 }
 
 /**
- * Swapを実行するメソッド
+ * Method to perform the swap.
  */
 async function executeSwap(
   tokenIn: `0x${string}`,
@@ -164,7 +164,7 @@ async function executeSwap(
 }
 
 /**
- * 暗号通貨をswapするツール
+ * Tools for swapping cryptocurrency
  * @param fromTokenAddress
  * @param toTokenAddress
  * @param amount
@@ -179,14 +179,14 @@ const swapTokens = tool(
     try {
       const { fromTokenAddress, toTokenAddress, amount } = input;
 
-      // 変換元のトークンのDecimalsを取得する
+      // Get the Decimals of the token to be converted.
       const fromTokenDecimals = (await publicClient.readContract({
         abi: ERC20_ABI,
         address: fromTokenAddress,
         functionName: "decimals",
       })) as number;
 
-      // 変換先のトークンのDecimalsを取得する
+      // Get the Decimals of the destination token
       const toTokenDecimals = (await publicClient.readContract({
         abi: ERC20_ABI,
         address: toTokenAddress,
@@ -195,27 +195,27 @@ const swapTokens = tool(
 
       console.log(`fromTokenDecimals: ${fromTokenDecimals}`);
       console.log(`toTokenDecimals: ${toTokenDecimals}`);
-      // 単位を変換する。
+      // Convert units.
       const amountInWei = parseUnits(amount.toString(), fromTokenDecimals);
       console.log(`amountInWei: ${amountInWei}`);
 
-      // トークンをApproveする
+      // Approve the token
       await approveToken(fromTokenAddress, amountInWei);
-      // Pool情報を取得する
+      // Retrieve pool information
       const poolAddress = await getPoolInfo(fromTokenAddress, toTokenAddress);
       console.log(`Pool Address: ${poolAddress}`);
-      // Swapクオートを取得する
+      // Get the Swap quote
       const quotedAmountOut = await quoteAndLogSwap(
         fromTokenAddress,
         toTokenAddress,
         amountInWei,
         toTokenDecimals,
       );
-      // 小数から整数に変換
+      // Convert from decimal to integer
       const minAmountOutBigInt = BigInt(
         Math.floor(Number(quotedAmountOut) * 10 ** toTokenDecimals),
       );
-      // swapを実行する。
+      // Execute swap
       const txHash = await executeSwap(
         fromTokenAddress,
         toTokenAddress,

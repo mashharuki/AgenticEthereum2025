@@ -19,7 +19,6 @@ export function TipButton() {
   const { address } = useAccount();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // アドレスがない場合は何も表示しない
   if (!address) {
     return null;
   }
@@ -67,7 +66,7 @@ export function TipButton() {
 
     const generateTransaction = useCallback(async () => {
       if (!amount || !recipientAddress) {
-        throw new Error("送金額と送金先アドレスを入力してください");
+        throw new Error("Invalid amount or recipient address");
       }
 
       return [

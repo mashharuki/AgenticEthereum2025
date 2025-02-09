@@ -1,4 +1,4 @@
-## Autonome 用の APIを叩く http リクエスト
+## Autonome HTTP API Endpoint
 @baseUrl=https://autonome.alt.technology/cdpagent-tinblo
 
 ### POST Request

@@ -18,7 +18,7 @@ const SignMessageInput = z
   .describe("Instructions for signing a blockchain message");
 
 /**
- * SignMessage用のツールを作成するメソッド
+ *  Method for creating tools for SignMessage
  */
 export const createSignMessageTool = () => {
   // Add the sign message tool

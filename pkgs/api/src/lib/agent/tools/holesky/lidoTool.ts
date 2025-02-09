@@ -49,7 +49,7 @@ const walletClient = createWalletClient({
 });
 
 /**
- * ETH の残高を取得するメソッド
+ * Method to obtain the ETH balance
  * @param walletAddress
  * @returns
  */
@@ -60,7 +60,7 @@ async function getETHBalance(walletAddress: `0x${string}`) {
 }
 
 /**
- * stETHの残高を取得するメソッド
+ * Method to obtain the stETH balance
  * @param walletAddress
  * @param tokenAddress
  * @returns
@@ -103,7 +103,7 @@ const stakeWithLido = tool(
 
       console.log(`Transaction sent: ${txHash}`);
 
-      // トランザクション完了待ち
+      // Waiting for transaction completion
       await publicClient.waitForTransactionReceipt({ hash: txHash });
 
       return txHash;
@@ -135,9 +135,9 @@ const stakeWithLido = tool(
 const getEthAndStEthBalances = tool(
   async () => {
     try {
-      // privyのWalletインスタンスを作成
+      // Create a privy Wallet instance
       const walletData = await createPrivyWallet();
-      // walletDataからWalletのアドレスを取得
+      // Get the Wallet address from walletData
       const walletAddress = walletData.address;
 
       console.log(`Getting balances for wallet: ${walletAddress}`);

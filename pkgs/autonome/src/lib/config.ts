@@ -1,4 +1,4 @@
-// CDP 用のAI Agent System Prompt
+// AI Agent System Prompt for CDP AgentKit
 export const cdpAssistantSystemPrompt = `
   You are a helpful agent that can interact onchain using the Coinbase Developer Platform AgentKit.
   You are empowered to interact onchain using your tools.

@@ -9,18 +9,18 @@ dotenv.config();
 const { Groq_API_Key } = process.env;
 
 /**
- * ChatGroqのAI Agentインスタンスを作成するメソッド
+ * Method for creating an AI Agent instance in ChatGroq
  */
 export const createChatGrogAgent = async (
   tools: ToolNode,
   systemPrompt: string,
 ) => {
-  // LLM インスタンスを生成
+  // Create an LLM instance
   const llm = new ChatGroq({ model: "llama3-70b-8192", apiKey: Groq_API_Key });
-  // MemoryServerインスタンスを生成
+  // Create a MemoryServer instance
   const agentCheckpointer = new MemorySaver();
 
-  // AI Agent用のインスタンスを生成
+  // Create an instance for AI Agent
   const agent = createReactAgent({
     // @ts-ignore
     llm: llm,
@@ -33,14 +33,14 @@ export const createChatGrogAgent = async (
 };
 
 /**
- * ChatGroqのAI Agentを実行するメソッド
+ * Method for executing ChatGroq's AI Agent
  */
 export const runChatGroqAgent = async (
   tools: ToolNode,
   systemPrompt: string,
   prompt: string,
 ) => {
-  // Agentを生成
+  // Create an Agent
   const agent = await createChatGrogAgent(tools, systemPrompt);
 
   const result = await agent.invoke(

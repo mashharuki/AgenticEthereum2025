@@ -89,7 +89,7 @@ export const createCdpAgentKitTools = async () => {
     ],
   });
 
-  // 外部ツールを取得
+  // Acquire external tools
   const cdpAgentKitTools = await getLangChainTools(agentkit);
 
   return { agentkit, cdpAgentKitTools, walletProvider };

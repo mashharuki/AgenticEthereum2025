@@ -60,7 +60,7 @@ const reStake = tool(
   async (input: { assetAddress: `0x${string}`; amount: number }) => {
     try {
       const { assetAddress, amount } = input;
-      // トークンのデシマル数を取得
+      // Get the token decimals.
       const decimals = (await publicClient.readContract({
         abi: ERC20_ABI,
         address: assetAddress,
@@ -68,11 +68,11 @@ const reStake = tool(
       })) as number;
 
       console.log(`Decimals: ${decimals}`);
-      // 単位を変換する。
+      // Convert units
       const amountInWei = parseUnits(amount.toString(), decimals);
       console.log(`amountInWei: ${amountInWei}`);
 
-      // 承認トランザクションを実行
+      // Execute the approval transaction
       const approveHash = await walletClient.writeContract({
         account: await createPrivyViemAccount(),
         abi: ERC20_ABI,
@@ -82,7 +82,7 @@ const reStake = tool(
       });
       console.log(`Approval transaction hash: ${approveHash}`);
 
-      // 承認の完了を待つ
+      // Wait for approval completion.
       await publicClient.waitForTransactionReceipt({ hash: approveHash });
 
       // Execute the transaction
@@ -100,7 +100,7 @@ const reStake = tool(
 
       console.log(`ReStaking Transaction sent: ${txHash}`);
 
-      // トランザクション完了待ち
+      // Waiting for transaction completion
       await publicClient.waitForTransactionReceipt({ hash: txHash });
 
       return txHash;

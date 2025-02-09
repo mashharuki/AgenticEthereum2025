@@ -10,7 +10,7 @@ dotenv.config();
 
 const { PRIVY_APP_ID, PRIVY_APP_SECRET_KEY } = process.env;
 
-// PrivyClient インスタンスを生成
+// Instantiate PrivyClient
 const privy = new PrivyClient(
   PRIVY_APP_ID as string,
   PRIVY_APP_SECRET_KEY as string,
@@ -19,11 +19,11 @@ const privy = new PrivyClient(
 // Wallet ID
 const walletId = "vshl96x85uvrq1f9z1g5r0wn";
 
-// wallet data用の変数
+// Variables for wallet data
 let walletData: WalletApiWalletResponseType;
 
 /**
- * walletIdからを作成するメソッド
+ * Method for retrieving data from the wallet Id
  */
 export const createPrivyWallet = async () => {
   walletData = await privy.walletApi.getWallet({
@@ -36,7 +36,7 @@ export const createPrivyWallet = async () => {
 };
 
 /**
- * viem用のwalletアカウントを作成するメソッド
+ * Method for creating a wallet account for viem
  */
 export const createPrivyViemAccount = async () => {
   const account = await createViemAccount({
@@ -49,7 +49,7 @@ export const createPrivyViemAccount = async () => {
 };
 
 /**
- * トランザクションを送信するメソッド
+ * Method to send a transaction.
  * @param client
  * @param walletData
  * @param chainId
@@ -65,7 +65,7 @@ export const sendTransactionFromPrivyWallet = async (
   data: `0x${string}`,
 ) => {
   console.log("walletData.id:", walletData.id);
-  // 少額の暗号ETHを送金する。
+  // Send a small amount of ETH.
   const txData = await privy.walletApi.ethereum.sendTransaction({
     walletId: walletData.id,
     caip2: `eip155:${client.chain?.id}`,
