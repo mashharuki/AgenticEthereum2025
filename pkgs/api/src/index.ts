@@ -159,7 +159,7 @@ app.post("/runCryptOpenAIAgent", async (c) => {
 
   // The system prompt and tools will change based on the operation flag of the argument.
   const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
-  // runOpenAIAIAgent メソッドを呼び出す。
+  // Call the runOpenAIAIAgent method.
   const response = await runOpenAIAIAgent(tools, systemPrompt, prompt);
 
   return c.json({
@@ -185,7 +185,7 @@ app.post("/runAnthropicAIAgent", async (c) => {
 
   // The system prompt and tools will change based on the operation flag of the argument.
   const { systemPrompt, tools } = setUpSystemPromptAndTools(operation);
-  // runOpenAIAIAgent メソッドを呼び出す。
+  // call runAnthropicAIAgent
   const response = await runAnthropicAIAgent(tools, systemPrompt, prompt);
 
   return c.json({
