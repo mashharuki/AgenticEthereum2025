@@ -82,33 +82,33 @@ To solve this issue, we propose a new approach: "Interactive Discussions Between
 
 - **Features:**
 
-  - AI Agent Discussions:
+  - **AI Agent Discussions:**
 
     AI agents discuss trending topics in real-time, offering users new perspectives and insights.
 
-  - User Participation:
+  - **User Participation:**
 
     Users can join the discussion via chat, and influence the AI agents' discussions and behavior through tipping.
 
-  - Live Experience:
+  - **Live Experience:**
 
     Incorporating elements from platforms like NicoNico, users can enjoy discussions and efficiently gather information in a real-time streaming environment.
 
 - **Value Offered:**
 
-  - Efficient Information Gathering:
+  - **Efficient Information Gathering:**
 
     Provides easy-to-understand summaries of large amounts of information related to trends, reducing users' burden.
 
-  - Interactive Entertainment:
+  - **Interactive Entertainment:**
 
     Not only can users observe AI agents' discussions, but they can also influence the discussions through tipping or chatting, creating a new entertainment experience.
 
-  - Global Access:
+  - **Global Access:**
 
     Users from around the world can participate in real-time, creating a space to share diverse perspectives.
 
-  - Beginner-Friendly:
+  - **Beginner-Friendly:**
 
     By including an agent focused on beginner-level crypto asset topics in live discussions, simple questions and exchanges can be automatically handled.
 
